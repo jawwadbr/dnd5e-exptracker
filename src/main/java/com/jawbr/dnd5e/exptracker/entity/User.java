@@ -14,6 +14,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.ZonedDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,6 +43,9 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @CreationTimestamp
+    private ZonedDateTime createdAt;
 
     /*
      * Usuario podera criar "campanha" e dentro dessa campanha terá seus Jogadores/Personagens

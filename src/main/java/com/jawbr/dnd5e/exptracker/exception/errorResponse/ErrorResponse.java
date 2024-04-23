@@ -3,7 +3,7 @@ package com.jawbr.dnd5e.exptracker.exception.errorResponse;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
@@ -11,12 +11,12 @@ import java.time.format.DateTimeFormatter;
 public class ErrorResponse {
 
     private int status;
-    private String mensagem;
-    private String hora;
+    private String message;
+    private String timestamp;
 
     public ErrorResponse(int status, String mensagem) {
         this.status = status;
-        this.mensagem = mensagem;
-        this.hora = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a"));
+        this.message = mensagem;
+        this.timestamp = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss a z"));
     }
 }

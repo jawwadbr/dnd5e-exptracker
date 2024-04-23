@@ -18,7 +18,7 @@ public class JwtService {
 
     @Value("${security.jwt.expiration.minutes}")
     private int expiration;
-    @Value("${security.jwt.key}")
+    @Value("${security.jwt.secret.key}")
     private String key;
 
     public TokenDTO generateToken(String email) {

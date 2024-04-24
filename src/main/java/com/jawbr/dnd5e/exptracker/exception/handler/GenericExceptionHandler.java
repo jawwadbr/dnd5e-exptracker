@@ -20,6 +20,6 @@ public class GenericExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleException(IllegalParameterException exc) {
         ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.BAD_GATEWAY);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }

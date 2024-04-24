@@ -1,14 +1,14 @@
 package com.jawbr.dnd5e.exptracker.entity;
 
-import com.jawbr.dnd5e.exptracker.util.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -29,39 +29,36 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table
-public class User {
+public class Campaign {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(unique = true)
     @Builder.Default
     private UUID uuid = UUID.randomUUID();
 
-    private String username;
+    private String name;
 
-    @Column(unique = true)
-    private String email;
-
-    @Column(length = 80)
-    private String password;
-
-    private boolean active;
-
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private String description;
 
     @CreationTimestamp
     private ZonedDateTime createdAt;
 
-    @ManyToMany(mappedBy = "players")
-    private List<Campaign> joinedCampaigns;
+    @ManyToMany
+    @JoinTable(
+            name = "campaign_joined_users",
+            joinColumns = @JoinColumn(name = "campaign_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> players;
 
-    @OneToMany(mappedBy = "creator")
-    private List<Campaign> createdCampaigns;
+    @OneToMany(mappedBy = "campaign", orphanRemoval = true)
+    private List<PlayerCharacter> playerCharacters;
 
-    @OneToMany(mappedBy = "player", orphanRemoval = true)
-    private List<PlayerCharacter> createdCharacters;
+    @ManyToOne
+    @JoinColumn(name = "creator_user_id")
+    private User creator;
 
 }

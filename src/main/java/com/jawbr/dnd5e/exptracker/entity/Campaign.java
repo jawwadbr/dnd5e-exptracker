@@ -48,8 +48,8 @@ public class Campaign {
 
     @ManyToMany
     @JoinTable(
-            name = "campaign_users",
-            joinColumns = @JoinColumn(name = "capaign_id"),
+            name = "campaign_joined_users",
+            joinColumns = @JoinColumn(name = "campaign_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> players;

@@ -1,7 +1,9 @@
 package com.jawbr.dnd5e.exptracker.dto.mapper;
 
 import com.jawbr.dnd5e.exptracker.dto.request.UserRequestDTO;
+import com.jawbr.dnd5e.exptracker.dto.response.UserCampaignsDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.UserDTO;
+import com.jawbr.dnd5e.exptracker.entity.Campaign;
 import com.jawbr.dnd5e.exptracker.entity.User;
 import com.jawbr.dnd5e.exptracker.util.Mapper;
 
@@ -22,6 +24,7 @@ public class UserDTOMapper implements Function<User, UserDTO> {
                 .created_at(user.getCreatedAt() != null ? user.getCreatedAt().format(formatter) + " UTC" : null)
                 .role(user.getRole().name().substring(5).substring(0, 1).toUpperCase() +
                         user.getRole().name().substring(5).substring(1).toLowerCase())
+                .public_uuid(user.getUuid().toString())
                 .build();
     }
 
@@ -30,6 +33,15 @@ public class UserDTOMapper implements Function<User, UserDTO> {
                 .username(userRequestDTO.username())
                 .email(userRequestDTO.email())
                 .password(userRequestDTO.password())
+                .build();
+    }
+
+    public UserCampaignsDTO mapJoinedCampaigns(Campaign campaign) {
+        return UserCampaignsDTO.builder()
+                .name(campaign.getName())
+                .description(campaign.getDescription())
+                .creator_username(campaign.getCreator().getUsername())
+                .creator_public_uuid(campaign.getCreator().getUuid().toString())
                 .build();
     }
 }

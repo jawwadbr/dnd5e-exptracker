@@ -7,6 +7,7 @@ public record UserCreationDTO(
         String username,
         String email,
         String creation_time,
+        String public_uuid,
         String message
 ) {
 }

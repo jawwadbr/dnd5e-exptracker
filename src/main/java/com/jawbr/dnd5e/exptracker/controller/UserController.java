@@ -36,17 +36,14 @@ public class UserController {
         return new ResponseEntity<>(userService.registerUser(userRequestDTO), HttpStatus.CREATED);
     }
 
-    //    @GetMapping("/joined-campaigns")
-//    public UserCampaignsDTO getJoinedCampaigns() {
-//        return userService.getJoinedCampaigns();
-//    }
     @GetMapping("/joined-campaigns")
     public Page<UserCampaignsDTO> getJoinedCampaigns(
             @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer pageSize
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String sortBy
     )
     {
-        return userService.getJoinedCampaigns(page, pageSize);
+        return userService.getJoinedCampaigns(page, pageSize, sortBy);
     }
 
 }

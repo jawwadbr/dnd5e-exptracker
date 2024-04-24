@@ -5,23 +5,23 @@ import com.jawbr.dnd5e.exptracker.dto.request.UserRequestDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.UserCampaignsDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.UserCreationDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.UserDTO;
+import com.jawbr.dnd5e.exptracker.entity.Campaign;
 import com.jawbr.dnd5e.exptracker.entity.User;
-import com.jawbr.dnd5e.exptracker.exception.CampaignNotFoundException;
+import com.jawbr.dnd5e.exptracker.exception.IllegalParameterException;
 import com.jawbr.dnd5e.exptracker.exception.IntegrityConstraintViolationException;
 import com.jawbr.dnd5e.exptracker.repository.UserRepository;
 import com.jawbr.dnd5e.exptracker.util.UserRole;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -46,32 +46,26 @@ public class UserService {
         return userDTOMapper.apply(currentAuthUser.getCurrentAuthUser());
     }
 
-    // User get joined campaigns - TODO - Don't like how this look, might change
-    public Page<UserCampaignsDTO> getJoinedCampaigns(Integer page, Integer pageSize) {
-        // Set default values
-        int currentPage = Optional.ofNullable(page).orElse(0);
-        int currentPageSize = Optional.ofNullable(pageSize).orElse(6);
-        // Limit page size to 15
-        currentPageSize = Math.min(currentPageSize, 15);
-        List<UserCampaignsDTO> campaignList = currentAuthUser.getCurrentAuthUser().getJoinedCampaigns()
-                .stream().map(userDTOMapper::mapJoinedCampaigns).collect(Collectors.toList());
-        if(campaignList.isEmpty()) {
-            throw new CampaignNotFoundException("You have not joined any campaigns!");
-        }
+    // User get joined campaigns
+    public Page<UserCampaignsDTO> getJoinedCampaigns(Integer page, Integer pageSize, String sortBy) {
+        User user = currentAuthUser.getCurrentAuthUser();
 
-        // Calculate the total number of pages
-        int totalPages = (int) Math.ceil((double) campaignList.size() / currentPageSize);
+        page = Optional.ofNullable(page).orElse(0);
+        pageSize = Math.min(Optional.ofNullable(pageSize).orElse(6), 15);
+        String sortByField = Optional.ofNullable(sortBy)
+                .filter(s -> !s.isEmpty())
+                .map(s -> switch(s) {
+                    case "creator", "creator_username" -> "creator";
+                    case "name" -> "name";
+                    default -> throw new IllegalParameterException(String.format("Parameter '%s' is illegal.", sortBy));
+                })
+                .orElse("id");
 
-        // Adjust the page number if necessary
-        if(currentPage >= totalPages) {
-            currentPage = totalPages - 1;
-        }
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(sortByField));
 
-        // Calculate the start and end
-        int start = currentPage * currentPageSize;
-        int end = Math.min(start + currentPageSize, campaignList.size());
+        Page<Campaign> campaigns = userRepository.findJoinedCampaignsByUserId(user.getId(), pageable);
 
-        return new PageImpl<>(campaignList.subList(start, end), PageRequest.of(currentPage, currentPageSize), campaignList.size());
+        return campaigns.map(userDTOMapper::mapJoinedCampaigns);
     }
 
     // User get created campaigns

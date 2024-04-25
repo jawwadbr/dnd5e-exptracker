@@ -1,6 +1,7 @@
 package com.jawbr.dnd5e.exptracker.controller;
 
 import com.jawbr.dnd5e.exptracker.dto.response.CampaignDTO;
+import com.jawbr.dnd5e.exptracker.dto.response.CampaignPlayersDTO;
 import com.jawbr.dnd5e.exptracker.service.CampaignService;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -49,5 +51,10 @@ public class CampaignController {
     @GetMapping("/me/created/{campaignUuid}")
     public CampaignDTO findCreatedCampaign(@PathVariable UUID campaignUuid) {
         return campaignService.findCreatedCampaignByUuid(campaignUuid);
+    }
+
+    @GetMapping("/me/joined/players/{campaignUuid}")
+    public List<CampaignPlayersDTO> findAllJoinedPlayersOnCampaign(@PathVariable UUID campaignUuid) {
+        return campaignService.findAllJoinedPlayersOnCampaign(campaignUuid);
     }
 }

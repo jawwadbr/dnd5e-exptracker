@@ -2,7 +2,9 @@ package com.jawbr.dnd5e.exptracker.service;
 
 import com.jawbr.dnd5e.exptracker.dto.mapper.CampaignDTOMapper;
 import com.jawbr.dnd5e.exptracker.dto.response.CampaignDTO;
+import com.jawbr.dnd5e.exptracker.dto.response.CampaignPlayersDTO;
 import com.jawbr.dnd5e.exptracker.entity.Campaign;
+import com.jawbr.dnd5e.exptracker.entity.User;
 import com.jawbr.dnd5e.exptracker.exception.CampaignNotFoundException;
 import com.jawbr.dnd5e.exptracker.exception.IllegalParameterException;
 import com.jawbr.dnd5e.exptracker.repository.CampaignRepository;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -72,7 +75,7 @@ public class CampaignService {
 
     public CampaignDTO findJoinedCampaignByUuid(UUID campaignUuid) {
         Campaign campaign = Optional.ofNullable(
-                campaignRepository.findJoinedCampaignByUuidAndUserId(campaignUuid, currentAuthUser.getCurrentAuthUser().getId()))
+                        campaignRepository.findJoinedCampaignByUuidAndUserId(campaignUuid, currentAuthUser.getCurrentAuthUser().getId()))
                 .orElseThrow(() -> new CampaignNotFoundException("Campaign not found."));
 
         return campaignDTOMapper.apply(campaign);
@@ -86,6 +89,12 @@ public class CampaignService {
         return campaignDTOMapper.apply(campaign);
     }
 
-    // TODO - Check all joined players on specific campaign
+    public List<CampaignPlayersDTO> findAllJoinedPlayersOnCampaign(UUID campaignUuid) {
+        List<User> users = Optional.ofNullable(campaignRepository.findAllJoinedPlayersOnCampaign(campaignUuid, currentAuthUser.getCurrentAuthUser().getId()))
+                .filter(list -> !list.isEmpty())
+                .orElseThrow(() -> new CampaignNotFoundException("Campaign or players not found, or user not a participant."));
+
+        return users.stream().map(campaignDTOMapper::mapAllJoinedPlayersOnCampaignToDTO).toList();
+    }
 
 }

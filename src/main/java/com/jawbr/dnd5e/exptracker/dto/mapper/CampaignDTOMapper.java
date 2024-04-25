@@ -1,10 +1,12 @@
 package com.jawbr.dnd5e.exptracker.dto.mapper;
 
 import com.jawbr.dnd5e.exptracker.dto.response.CampaignDTO;
+import com.jawbr.dnd5e.exptracker.dto.response.CampaignPlayersDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.PlayerCharacterDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.UserDTO;
 import com.jawbr.dnd5e.exptracker.entity.Campaign;
 import com.jawbr.dnd5e.exptracker.entity.PlayerCharacter;
+import com.jawbr.dnd5e.exptracker.entity.User;
 import com.jawbr.dnd5e.exptracker.util.ExperiencePointsTable;
 import com.jawbr.dnd5e.exptracker.util.Mapper;
 
@@ -69,6 +71,13 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
                 .name(campaign.getName())
                 .description(campaign.getDescription())
                 .public_campaign_uuid(campaign.getUuid().toString())
+                .build();
+    }
+
+    public CampaignPlayersDTO mapAllJoinedPlayersOnCampaignToDTO(User user) {
+        return CampaignPlayersDTO.builder()
+                .username(user.getUsername())
+                .player_public_uuid(user.getUuid().toString())
                 .build();
     }
 }

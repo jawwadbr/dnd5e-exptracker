@@ -6,6 +6,7 @@ import com.jawbr.dnd5e.exptracker.dto.response.UserCreationDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.UserDTO;
 import com.jawbr.dnd5e.exptracker.entity.User;
 import com.jawbr.dnd5e.exptracker.exception.IntegrityConstraintViolationException;
+import com.jawbr.dnd5e.exptracker.exception.UserNotFoundException;
 import com.jawbr.dnd5e.exptracker.repository.UserRepository;
 import com.jawbr.dnd5e.exptracker.util.UserRole;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -37,6 +38,11 @@ public class UserService {
 
     public UserDTO userCheckInfo() {
         return userDTOMapper.apply(currentAuthUser.getCurrentAuthUser());
+    }
+
+    public UserDTO checkUserProfile(UUID userUuid) {
+        return userDTOMapper.mapEntityProfileToDto(Optional.ofNullable(userRepository.findByUuid(userUuid))
+                .orElseThrow(() -> new UserNotFoundException("User not found")));
     }
 
     public UserCreationDTO registerUser(UserRequestDTO userRequestDTO) {

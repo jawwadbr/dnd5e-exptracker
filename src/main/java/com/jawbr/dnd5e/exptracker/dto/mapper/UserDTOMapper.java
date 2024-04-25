@@ -33,4 +33,17 @@ public class UserDTOMapper implements Function<User, UserDTO> {
                 .password(userRequestDTO.password())
                 .build();
     }
+
+    public UserDTO mapEntityProfileToDto(User user) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss a");
+
+        return UserDTO.builder()
+                .username(user.getUsername())
+                .created_at(user.getCreatedAt() != null ? user.getCreatedAt().format(formatter) + " UTC" : null)
+                .public_uuid(user.getUuid().toString())
+                .role(user.getRole().name().substring(5).substring(0, 1).toUpperCase() +
+                        user.getRole().name().substring(5).substring(1).toLowerCase())
+                .build();
+    }
 }

@@ -36,6 +36,6 @@ public enum ExperiencePointsTable {
                 return levels[i];
             }
         }
-        return ExperiencePointsTable.LEVEL_1; // Default to LEVEL_1 if XP is less than the minimum
+        return ExperiencePointsTable.LEVEL_1;
     }
 }

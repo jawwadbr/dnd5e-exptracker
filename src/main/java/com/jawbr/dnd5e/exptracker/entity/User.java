@@ -39,9 +39,10 @@ public class User {
     @Builder.Default
     private UUID uuid = UUID.randomUUID();
 
+    @Column(nullable = false)
     private String username;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(length = 80)

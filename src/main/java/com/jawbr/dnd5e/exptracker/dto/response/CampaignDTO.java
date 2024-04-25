@@ -12,7 +12,7 @@ public record CampaignDTO(
         String description,
         String public_campaign_uuid,
         String created_at,
-        List<PlayerCharacterReferenceDTO> players,
+        List<PlayerCharacterDTO> players,
         CampaignCreatorDTO campaign_creator
 ) {
     @Builder

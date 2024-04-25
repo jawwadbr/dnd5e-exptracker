@@ -86,4 +86,6 @@ public class CampaignService {
         return campaignDTOMapper.apply(campaign);
     }
 
+    // TODO - Check all joined players on specific campaign
+
 }

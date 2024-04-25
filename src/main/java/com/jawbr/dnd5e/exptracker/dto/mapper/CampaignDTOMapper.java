@@ -1,7 +1,7 @@
 package com.jawbr.dnd5e.exptracker.dto.mapper;
 
 import com.jawbr.dnd5e.exptracker.dto.response.CampaignDTO;
-import com.jawbr.dnd5e.exptracker.dto.response.PlayerCharacterReferenceDTO;
+import com.jawbr.dnd5e.exptracker.dto.response.PlayerCharacterDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.UserDTO;
 import com.jawbr.dnd5e.exptracker.entity.Campaign;
 import com.jawbr.dnd5e.exptracker.entity.PlayerCharacter;
@@ -21,10 +21,10 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss a");
 
-        List<PlayerCharacterReferenceDTO> playerCharacterReferenceDTOS = new ArrayList<>();
+        List<PlayerCharacterDTO> playerCharacterReferenceDTOS = new ArrayList<>();
         if(campaign.getPlayers() != null) {
             for(PlayerCharacter pc : campaign.getPlayerCharacters()) {
-                playerCharacterReferenceDTOS.add(PlayerCharacterReferenceDTO.builder()
+                playerCharacterReferenceDTOS.add(PlayerCharacterDTO.builder()
                                 .name(pc.getCharacterName())
                                 .char_class(pc.getPlayerCharClass().getName())
                                 .char_race(pc.getPlayerRace().getName())

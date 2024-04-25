@@ -35,10 +35,11 @@ public class Campaign {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     @Builder.Default
     private UUID uuid = UUID.randomUUID();
 
+    @Column(nullable = false)
     private String name;
 
     private String description;

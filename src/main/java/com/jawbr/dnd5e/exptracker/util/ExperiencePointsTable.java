@@ -28,4 +28,14 @@ public enum ExperiencePointsTable {
     LEVEL_20(355000);
 
     private final int experiencePoints;
+
+    public static ExperiencePointsTable getLevelFromXP(int xp) {
+        ExperiencePointsTable[] levels = ExperiencePointsTable.values();
+        for (int i = levels.length - 1; i >= 0; i--) {
+            if (xp >= levels[i].getExperiencePoints()) {
+                return levels[i];
+            }
+        }
+        return ExperiencePointsTable.LEVEL_1; // Default to LEVEL_1 if XP is less than the minimum
+    }
 }

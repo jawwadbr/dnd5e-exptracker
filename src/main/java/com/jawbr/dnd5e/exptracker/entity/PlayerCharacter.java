@@ -33,6 +33,8 @@ public class PlayerCharacter {
     @Builder.Default
     private UUID uuid = UUID.randomUUID();
 
+    private String characterName;
+
     @ManyToOne
     @JoinColumn(name = "class_id")
     private Class playerCharClass;

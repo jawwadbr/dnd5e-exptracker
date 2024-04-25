@@ -1,9 +1,7 @@
 package com.jawbr.dnd5e.exptracker.dto.mapper;
 
 import com.jawbr.dnd5e.exptracker.dto.request.UserRequestDTO;
-import com.jawbr.dnd5e.exptracker.dto.response.UserCampaignsDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.UserDTO;
-import com.jawbr.dnd5e.exptracker.entity.Campaign;
 import com.jawbr.dnd5e.exptracker.entity.User;
 import com.jawbr.dnd5e.exptracker.util.Mapper;
 
@@ -33,15 +31,6 @@ public class UserDTOMapper implements Function<User, UserDTO> {
                 .username(userRequestDTO.username())
                 .email(userRequestDTO.email())
                 .password(userRequestDTO.password())
-                .build();
-    }
-
-    public UserCampaignsDTO mapJoinedCampaigns(Campaign campaign) {
-        return UserCampaignsDTO.builder()
-                .name(campaign.getName())
-                .description(campaign.getDescription())
-                .creator_username(campaign.getCreator().getUsername())
-                .creator_public_uuid(campaign.getCreator().getUuid().toString())
                 .build();
     }
 }

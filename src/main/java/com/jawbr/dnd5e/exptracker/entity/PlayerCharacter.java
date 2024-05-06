@@ -52,4 +52,6 @@ public class PlayerCharacter {
     private Campaign campaign;
 
     private int experiencePoints;
+
+    private boolean active;
 }

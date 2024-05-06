@@ -1,11 +1,13 @@
 package com.jawbr.dnd5e.exptracker.service;
 
 import com.jawbr.dnd5e.exptracker.dto.mapper.ClassDTOMapper;
+import com.jawbr.dnd5e.exptracker.dto.request.ClassRequestDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.ClassDTO;
 import com.jawbr.dnd5e.exptracker.entity.Class;
 import com.jawbr.dnd5e.exptracker.exception.ClassNotFoundException;
 import com.jawbr.dnd5e.exptracker.exception.IllegalParameterException;
 import com.jawbr.dnd5e.exptracker.repository.ClassRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -54,5 +56,30 @@ public class ClassService {
         return Optional.ofNullable(classRepository.findByUuid(classUuid))
                 .map(classDTOMapper)
                 .orElseThrow(() -> new ClassNotFoundException("No classes found."));
+    }
+
+    /*
+     * ADMIN ENDPOINTS
+     *
+     * ADD MORE CLASSES
+     * DELETE CLASSES
+     * EDIT CLASSES
+     *
+     */
+
+    public ClassDTO saveClass(ClassRequestDTO classRequestDTO) {
+        if(Optional.ofNullable(classRepository.findByName(classRequestDTO.name())).isPresent()) {
+            throw new DataIntegrityViolationException(
+                    String.format("Class '%s' already exists.", classRequestDTO.name()));
+        }
+
+        Class newClass = new Class();
+        newClass.setName(classRequestDTO.name());
+        newClass = classRepository.save(newClass);
+
+        return ClassDTO.builder()
+                .name(newClass.getName())
+                .class_uuid(newClass.getUuid().toString())
+                .build();
     }
 }

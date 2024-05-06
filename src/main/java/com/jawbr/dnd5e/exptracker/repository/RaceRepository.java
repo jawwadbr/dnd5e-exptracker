@@ -8,4 +8,6 @@ import java.util.UUID;
 public interface RaceRepository extends JpaRepository<Race, Long> {
 
     Race findByUuid(UUID raceUuid);
+
+    Race findByName(String name);
 }

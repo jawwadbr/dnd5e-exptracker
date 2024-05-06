@@ -27,8 +27,13 @@ public class SecurityConfig {
                 config
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/races/**", "/api/classes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/races/**", "/api/classes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/races/**", "/api/classes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/races/**", "/api/classes/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
         );
+
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);

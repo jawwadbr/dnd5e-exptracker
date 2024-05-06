@@ -1,11 +1,13 @@
 package com.jawbr.dnd5e.exptracker.service;
 
 import com.jawbr.dnd5e.exptracker.dto.mapper.RaceDTOMapper;
+import com.jawbr.dnd5e.exptracker.dto.request.RaceRequestDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.RaceDTO;
 import com.jawbr.dnd5e.exptracker.entity.Race;
 import com.jawbr.dnd5e.exptracker.exception.IllegalParameterException;
 import com.jawbr.dnd5e.exptracker.exception.RaceNotFoundException;
 import com.jawbr.dnd5e.exptracker.repository.RaceRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -52,5 +54,30 @@ public class RaceService {
         return Optional.ofNullable(raceRepository.findByUuid(raceUuid))
                 .map(raceDTOMapper)
                 .orElseThrow(() -> new RaceNotFoundException("No races found."));
+    }
+
+    /*
+     * ADMIN ENDPOINTS
+     *
+     * ADD MORE RACES
+     * DELETE RACES
+     * EDIT RACES
+     *
+     */
+
+    public RaceDTO saveRace(RaceRequestDTO raceRequestDTO) {
+        if(Optional.ofNullable(raceRepository.findByName(raceRequestDTO.name())).isPresent()) {
+            throw new DataIntegrityViolationException(
+                    String.format("Race '%s' already exists.", raceRequestDTO.name()));
+        }
+
+        Race newRace = new Race();
+        newRace.setName(raceRequestDTO.name());
+        newRace = raceRepository.save(newRace);
+
+        return RaceDTO.builder()
+                .name(newRace.getName())
+                .race_uuid(newRace.getUuid().toString())
+                .build();
     }
 }

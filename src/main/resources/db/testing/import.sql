@@ -37,5 +37,5 @@ INSERT INTO race(name, uuid) VALUES ('Tiefling', UNHEX(REPLACE('550e8400-e29b-41
 INSERT INTO race(name, uuid) VALUES ('Aarakocra', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440023', '-', '')));
 INSERT INTO race(name, uuid) VALUES ('Aasimar', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440024', '-', '')));
 
-INSERT INTO player_character(id, experience_points, campaign_id, class_id, race_id, user_id, uuid, character_name) VALUES (1, 2000, 1, 1, 1, 1, UNHEX(REPLACE('83f8634b-33df-4f67-b659-66b55cd8534f', '-', '')), 'Mirlon')
-INSERT INTO player_character(id, experience_points, campaign_id, class_id, race_id, user_id, uuid, character_name) VALUES (2, 2900, 1, 3, 6, 2, UNHEX(REPLACE('3f2877a0-4a2b-4e5d-8b5e-3b5a07859a06', '-', '')), 'Makan')
+INSERT INTO player_character(id, experience_points, campaign_id, class_id, race_id, user_id, uuid, character_name, active) VALUES (1, 2000, 1, 1, 1, 1, UNHEX(REPLACE('83f8634b-33df-4f67-b659-66b55cd8534f', '-', '')), 'Mirlon', true)
+INSERT INTO player_character(id, experience_points, campaign_id, class_id, race_id, user_id, uuid, character_name, active) VALUES (2, 2900, 1, 3, 6, 2, UNHEX(REPLACE('3f2877a0-4a2b-4e5d-8b5e-3b5a07859a06', '-', '')), 'Makan', true)

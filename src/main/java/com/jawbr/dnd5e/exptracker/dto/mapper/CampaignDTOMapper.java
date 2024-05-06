@@ -23,21 +23,40 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss a");
 
-        List<PlayerCharacterDTO> playerCharacterReferenceDTOS = new ArrayList<>();
+        List<PlayerCharacterDTO> activePlayerCharacterReferenceDTOS = new ArrayList<>();
+        List<PlayerCharacterDTO> inactivePlayerCharacterReferenceDTOS = new ArrayList<>();
         if(campaign.getPlayers() != null) {
             for(PlayerCharacter pc : campaign.getPlayerCharacters()) {
-                playerCharacterReferenceDTOS.add(PlayerCharacterDTO.builder()
-                                .name(pc.getCharacterName())
-                                .char_class(pc.getPlayerCharClass().getName())
-                                .char_race(pc.getPlayerRace().getName())
-                                .experience_points(pc.getExperiencePoints())
-                                .level(ExperiencePointsTable.getLevelFromXP(pc.getExperiencePoints()))
-                                .player(UserDTO.builder()
-                                        .username(pc.getPlayer().getUsername())
-                                        .public_uuid(pc.getPlayer().getUuid().toString())
-                                        .build())
-                                .player_character_public_uuid(pc.getUuid().toString())
-                        .build());
+                if(pc.isActive()) {
+                    activePlayerCharacterReferenceDTOS.add(PlayerCharacterDTO.builder()
+                            .name(pc.getCharacterName())
+                            .char_class(pc.getPlayerCharClass().getName())
+                            .char_race(pc.getPlayerRace().getName())
+                            .experience_points(pc.getExperiencePoints())
+                            .level(ExperiencePointsTable.getLevelFromXP(pc.getExperiencePoints()))
+                            .player(UserDTO.builder()
+                                    .username(pc.getPlayer().getUsername())
+                                    .public_uuid(pc.getPlayer().getUuid().toString())
+                                    .build())
+                            .player_character_public_uuid(pc.getUuid().toString())
+                            .active(pc.isActive())
+                            .build());
+                }
+                else {
+                    inactivePlayerCharacterReferenceDTOS.add(PlayerCharacterDTO.builder()
+                            .name(pc.getCharacterName())
+                            .char_class(pc.getPlayerCharClass().getName())
+                            .char_race(pc.getPlayerRace().getName())
+                            .experience_points(pc.getExperiencePoints())
+                            .level(ExperiencePointsTable.getLevelFromXP(pc.getExperiencePoints()))
+                            .player(UserDTO.builder()
+                                    .username(pc.getPlayer().getUsername())
+                                    .public_uuid(pc.getPlayer().getUuid().toString())
+                                    .build())
+                            .player_character_public_uuid(pc.getUuid().toString())
+                            .active(pc.isActive())
+                            .build());
+                }
             }
         }
 
@@ -50,7 +69,8 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
                         .username(campaign.getCreator().getUsername())
                         .public_uuid(campaign.getCreator().getUuid().toString())
                         .build())
-                .players(playerCharacterReferenceDTOS)
+                .players_characters(activePlayerCharacterReferenceDTOS)
+                .inactive_players_characters(inactivePlayerCharacterReferenceDTOS)
                 .build();
     }
 

@@ -7,6 +7,7 @@ import lombok.Builder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
 public record PlayerCharacterDTO(
+        boolean active,
         String name,
         String char_class,
         String char_race,

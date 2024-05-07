@@ -4,9 +4,11 @@ import com.jawbr.dnd5e.exptracker.dto.mapper.ClassDTOMapper;
 import com.jawbr.dnd5e.exptracker.dto.request.ClassRequestDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.ClassDTO;
 import com.jawbr.dnd5e.exptracker.entity.Class;
+import com.jawbr.dnd5e.exptracker.entity.PlayerCharacter;
 import com.jawbr.dnd5e.exptracker.exception.ClassNotFoundException;
 import com.jawbr.dnd5e.exptracker.exception.IllegalParameterException;
 import com.jawbr.dnd5e.exptracker.repository.ClassRepository;
+import com.jawbr.dnd5e.exptracker.repository.PlayerCharacterRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,12 +24,14 @@ import java.util.UUID;
 public class ClassService {
 
     private final ClassRepository classRepository;
+    private final PlayerCharacterRepository playerCharacterRepository;
     private final ClassDTOMapper classDTOMapper;
 
     public ClassService(ClassRepository classRepository,
-                        ClassDTOMapper classDTOMapper)
+                        PlayerCharacterRepository playerCharacterRepository, ClassDTOMapper classDTOMapper)
     {
         this.classRepository = classRepository;
+        this.playerCharacterRepository = playerCharacterRepository;
         this.classDTOMapper = classDTOMapper;
     }
 
@@ -81,5 +86,36 @@ public class ClassService {
                 .name(newClass.getName())
                 .class_uuid(newClass.getUuid().toString())
                 .build();
+    }
+
+    public void deleteClassByName(String className) {
+        Optional.of(classRepository.findByName(className)).ifPresentOrElse(
+                theClass -> {
+                    List<PlayerCharacter> characters = playerCharacterRepository.findByPlayerCharClass(theClass);
+                    characters.forEach(c -> c.setPlayerCharClass(null));
+                    classRepository.delete(theClass);
+                },
+                () -> {
+                    throw new ClassNotFoundException(String.format("Class '%s' not found.", className));
+                }
+        );
+    }
+
+    public ClassDTO updateClass(ClassRequestDTO classRequestDTO, String className) {
+        return Optional.of(classRepository.findByName(className)).map((c) -> {
+                    Class updatedClass = Class.builder()
+                            .id(c.getId())
+                            .uuid(c.getUuid())
+                            .name(classRequestDTO.name())
+                            .build();
+
+                    classRepository.save(updatedClass);
+                    return ClassDTO.builder()
+                            .class_uuid(updatedClass.getUuid().toString())
+                            .name(updatedClass.getName())
+                            .build();
+                })
+                .orElseThrow(() ->
+                        new ClassNotFoundException(String.format("Class '%s' not found.", className)));
     }
 }

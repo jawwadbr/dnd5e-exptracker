@@ -1,6 +1,8 @@
 package com.jawbr.dnd5e.exptracker.repository;
 
+import com.jawbr.dnd5e.exptracker.entity.Class;
 import com.jawbr.dnd5e.exptracker.entity.PlayerCharacter;
+import com.jawbr.dnd5e.exptracker.entity.Race;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,4 +17,7 @@ public interface PlayerCharacterRepository extends JpaRepository<PlayerCharacter
     @Query("SELECT pc from PlayerCharacter pc JOIN pc.player p WHERE p.id = :userId AND pc.uuid = :characterUuid")
     PlayerCharacter findUserPlayerCharacterByUuid(UUID characterUuid, Long userId);
 
+    List<PlayerCharacter> findByPlayerRace(Race race);
+
+    List<PlayerCharacter> findByPlayerCharClass(Class theClass);
 }

@@ -30,8 +30,8 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
                 if(pc.isActive()) {
                     activePlayerCharacterReferenceDTOS.add(PlayerCharacterDTO.builder()
                             .name(pc.getCharacterName())
-                            .char_class(pc.getPlayerCharClass().getName())
-                            .char_race(pc.getPlayerRace().getName())
+                            .char_class((pc.getPlayerCharClass() != null) ? pc.getPlayerCharClass().getName() : "null")
+                            .char_race((pc.getPlayerRace() != null) ? pc.getPlayerRace().getName() : "null")
                             .experience_points(pc.getExperiencePoints())
                             .level(ExperiencePointsTable.getLevelFromXP(pc.getExperiencePoints()))
                             .player(UserDTO.builder()
@@ -45,8 +45,8 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
                 else {
                     inactivePlayerCharacterReferenceDTOS.add(PlayerCharacterDTO.builder()
                             .name(pc.getCharacterName())
-                            .char_class(pc.getPlayerCharClass().getName())
-                            .char_race(pc.getPlayerRace().getName())
+                            .char_class((pc.getPlayerCharClass() != null) ? pc.getPlayerCharClass().getName() : "null")
+                            .char_race((pc.getPlayerRace() != null) ? pc.getPlayerRace().getName() : "null")
                             .experience_points(pc.getExperiencePoints())
                             .level(ExperiencePointsTable.getLevelFromXP(pc.getExperiencePoints()))
                             .player(UserDTO.builder()

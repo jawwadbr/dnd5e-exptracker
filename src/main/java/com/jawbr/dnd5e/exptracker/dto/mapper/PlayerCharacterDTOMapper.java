@@ -15,8 +15,8 @@ public class PlayerCharacterDTOMapper implements Function<PlayerCharacter, Playe
     public PlayerCharacterDTO apply(PlayerCharacter playerCharacter) {
         return PlayerCharacterDTO.builder()
                 .name(playerCharacter.getCharacterName())
-                .char_class(playerCharacter.getPlayerCharClass().getName())
-                .char_race(playerCharacter.getPlayerRace().getName())
+                .char_class((playerCharacter.getPlayerCharClass() != null) ? playerCharacter.getPlayerCharClass().getName() : "null")
+                .char_race((playerCharacter.getPlayerRace() != null) ? playerCharacter.getPlayerRace().getName() : "null")
                 .experience_points(playerCharacter.getExperiencePoints())
                 .level(ExperiencePointsTable.getLevelFromXP(playerCharacter.getExperiencePoints()))
                 .campaign(CampaignDTO.builder()

@@ -382,6 +382,57 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Update Race By Name",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"Dragon Forged\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/races/Dragonborn",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"races",
+								"Dragonborn"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Race by Name",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/races/Dragonborn",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"races",
+								"Dragonborn"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -457,19 +508,63 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Update Class By Name",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"Tribal Warrior\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/classes/Barbarian",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"classes",
+								"Barbarian"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Class By Name",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/classes/Tribal Warrior",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"classes",
+								"Tribal Warrior"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
 	],
 	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyQGdtYWlsLmNvbSIsImV4cCI6MTcxNDg4NTUxM30.wZllXjTDBx68VsjvVYns7vJoP9sRgnC1wfVKRFgvs_OgGL2lx2ty5gdHdHDDPkiPJXEdtrLmhbIKWYCNYeqxUw",
-				"type": "string"
-			}
-		]
+		"type": "inherit"
 	},
 	"event": [
 		{

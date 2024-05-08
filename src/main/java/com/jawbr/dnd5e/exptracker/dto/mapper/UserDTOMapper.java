@@ -46,4 +46,19 @@ public class UserDTOMapper implements Function<User, UserDTO> {
                         user.getRole().name().substring(5).substring(1).toLowerCase())
                 .build();
     }
+
+    public UserDTO mapProfileForAdmin(User user) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss a");
+
+        return UserDTO.builder()
+                .username(user.getUsername())
+                .is_active(user.isActive())
+                .email(user.getEmail())
+                .created_at(user.getCreatedAt() != null ? user.getCreatedAt().format(formatter) + " UTC" : null)
+                .role(user.getRole().name().substring(5).substring(0, 1).toUpperCase() +
+                        user.getRole().name().substring(5).substring(1).toLowerCase())
+                .public_uuid(user.getUuid().toString())
+                .build();
+    }
 }

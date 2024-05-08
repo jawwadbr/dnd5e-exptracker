@@ -12,10 +12,13 @@ import com.jawbr.dnd5e.exptracker.util.UserRole;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.jawbr.dnd5e.exptracker.util.CheckRequestConfirmation.checkConfirmation;
 
 @Service
 public class UserService {
@@ -41,6 +44,10 @@ public class UserService {
     }
 
     public UserDTO checkUserProfile(UUID userUuid) {
+        User current = currentAuthUser.getCurrentAuthUser();
+        // Incase the user input own uuid it will map correctly
+        if(current.getUuid().equals(userUuid))
+            return userDTOMapper.apply(current);
         return userDTOMapper.mapEntityProfileToDto(Optional.ofNullable(userRepository.findByUuid(userUuid))
                 .orElseThrow(() -> new UserNotFoundException("User not found")));
     }
@@ -77,4 +84,65 @@ public class UserService {
                 .message("User created.")
                 .build();
     }
+
+    public void deleteUser(boolean isConfirmed) {
+        checkConfirmation(isConfirmed);
+        User userToBeDeleted = currentAuthUser.getCurrentAuthUser();
+        userToBeDeleted.getJoinedCampaigns().forEach(c -> c.getPlayers().remove(userToBeDeleted));
+        userRepository.delete(userToBeDeleted);
+    }
+
+    public UserDTO updateUser(UserRequestDTO userRequestDTO) {
+        User user = currentAuthUser.getCurrentAuthUser();
+
+        final String username = StringUtils.hasText(userRequestDTO.username()) ? userRequestDTO.username() : user.getUsername();
+        String password = user.getPassword();
+        if(StringUtils.hasText(userRequestDTO.password()) && !passwordEncoder.matches(userRequestDTO.password(), user.getPassword())) {
+            password = passwordEncoder.encode(userRequestDTO.password());
+        }
+
+        User updatedUser = user;
+        updatedUser.setUsername(username);
+        updatedUser.setPassword(password);
+
+        updatedUser = userRepository.save(updatedUser);
+
+        return userDTOMapper.apply(updatedUser);
+    }
+
+    public void adminDeleteUser(boolean isConfirmed, UUID userUuid) {
+        checkConfirmation(isConfirmed);
+        User userToBeDeleted = Optional.ofNullable(userRepository.findByUuid(userUuid))
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        userToBeDeleted.getJoinedCampaigns().forEach(c -> c.getPlayers().remove(userToBeDeleted));
+        userRepository.delete(userToBeDeleted);
+    }
+
+    /*
+     * When an account is deactivated all the user information is not deleted i.e. created characters, joined campaigns and created campaigns
+     * But it will be deleted if the account is deactivated for long enough
+     */
+    public void adminDeactivateUser(boolean isConfirmed, UUID userUuid) {
+        checkConfirmation(isConfirmed);
+        User userToBeDeactivated = Optional.ofNullable(userRepository.findByUuid(userUuid))
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        userToBeDeactivated.setActive(false);
+        userRepository.save(userToBeDeactivated);
+    }
+
+    public void adminReactivateUser(boolean isConfirmed, UUID userUuid) {
+        checkConfirmation(isConfirmed);
+        User userToBeReactivated = Optional.ofNullable(userRepository.findByUuid(userUuid))
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        userToBeReactivated.setActive(true);
+        userRepository.save(userToBeReactivated);
+    }
+
+    public UserDTO adminCheckUserProfile(UUID userUuid) {
+        return userDTOMapper.mapProfileForAdmin(Optional.ofNullable(userRepository.findByUuid(userUuid))
+                .orElseThrow(() -> new UserNotFoundException("User not found")));
+    }
+
+    // TODO - Method for admin to see all users not including admins
+    // TODO - Method for admin to see all admins
 }

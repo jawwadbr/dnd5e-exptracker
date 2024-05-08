@@ -42,10 +42,17 @@ public class PlayerCharacterService {
     // User check specific player character using UUID
     public PlayerCharacterDTO findUserPlayerCharacterByUuid(UUID characterUuid) {
         PlayerCharacter playerCharacter = Optional.ofNullable(
-                playerCharacterRepository.findUserPlayerCharacterByUuid(characterUuid,
-                        currentAuthUser.getCurrentAuthUser().getId()))
+                        playerCharacterRepository.findUserPlayerCharacterByUuid(characterUuid,
+                                currentAuthUser.getCurrentAuthUser().getId()))
                 .orElseThrow(() -> new PlayerCharacterNotFoundException("No player character found."));
 
         return playerCharacterDTOMapper.apply(playerCharacter);
     }
+
+    /*
+     * User create a character
+     * User can turn his character inactive (Owner can turn a character inactive too)
+     * User delete his character (Owner can delete characters too)
+     * User edit his character (Owner can edit character too)
+     */
 }

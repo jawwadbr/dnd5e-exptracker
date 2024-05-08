@@ -1,6 +1,7 @@
 package com.jawbr.dnd5e.exptracker.exception.handler;
 
 import com.jawbr.dnd5e.exptracker.exception.InvalidPasswordException;
+import com.jawbr.dnd5e.exptracker.exception.UserAccountDeactivatedException;
 import com.jawbr.dnd5e.exptracker.exception.UserNotFoundException;
 import com.jawbr.dnd5e.exptracker.exception.errorResponse.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -21,5 +22,11 @@ public class UserExceptionHandler {
     public ResponseEntity<ErrorResponse> handleException(InvalidPasswordException exc) {
         ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(UserAccountDeactivatedException exc) {
+        ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN.value(), exc.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 }

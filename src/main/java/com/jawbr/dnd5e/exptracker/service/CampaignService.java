@@ -97,4 +97,15 @@ public class CampaignService {
         return users.stream().map(campaignDTOMapper::mapAllJoinedPlayersOnCampaignToDTO).toList();
     }
 
+    /*
+     * User create campaign
+     * User update campaign
+     * User delete campaign
+     * User owner of campaign create invite code
+     * User join campaign using invite code
+     * User leave campaign
+     * User owner of campaign give all players XP (Can include inactive players if wanted)
+     * User owner of campaign give XP to a single player using UUID (including inactive players)
+     */
+
 }

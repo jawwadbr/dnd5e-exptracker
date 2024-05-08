@@ -4,6 +4,7 @@ import com.jawbr.dnd5e.exptracker.dto.request.LoginRequestDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.TokenDTO;
 import com.jawbr.dnd5e.exptracker.entity.User;
 import com.jawbr.dnd5e.exptracker.exception.InvalidPasswordException;
+import com.jawbr.dnd5e.exptracker.exception.UserAccountDeactivatedException;
 import com.jawbr.dnd5e.exptracker.exception.UserNotFoundException;
 import com.jawbr.dnd5e.exptracker.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,6 +35,10 @@ public class JwtUserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = Optional.ofNullable(userRepository.findByEmail(email))
                 .orElseThrow(() -> new UserNotFoundException(String.format("Email %s not found.", email)));
+
+        Optional.of(user).filter(User::isActive)
+                .orElseThrow(() ->
+                        new UserAccountDeactivatedException(String.format("The account '%s' was deactivated.", email)));
 
         Collection<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()));
 

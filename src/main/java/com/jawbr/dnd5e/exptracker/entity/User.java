@@ -1,6 +1,7 @@
 package com.jawbr.dnd5e.exptracker.entity;
 
 import com.jawbr.dnd5e.exptracker.util.UserRole;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -56,13 +57,13 @@ public class User {
     @CreationTimestamp
     private ZonedDateTime createdAt;
 
-    @ManyToMany(mappedBy = "players")
+    @ManyToMany(mappedBy = "players", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
     private List<Campaign> joinedCampaigns;
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private List<Campaign> createdCampaigns;
 
-    @OneToMany(mappedBy = "player", orphanRemoval = true)
+    @OneToMany(mappedBy = "player", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<PlayerCharacter> createdCharacters;
 
 }

@@ -640,6 +640,77 @@
 					"name": "Users",
 					"item": [
 						{
+							"name": "FindAll Users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/admin/users?page=0&pageSize=15&sortBy",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"admin",
+										"users"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "pageSize",
+											"value": "15"
+										},
+										{
+											"key": "sortBy",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindAll Admins",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/admin/users/admins?page=0&pageSize=15&sortBy",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"admin",
+										"users",
+										"admins"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "pageSize",
+											"value": "15"
+										},
+										{
+											"key": "sortBy",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Check User Info",
 							"request": {
 								"method": "GET",
@@ -741,6 +812,81 @@
 										{
 											"key": "isConfirmed",
 											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Find Users By Username",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/admin/users/u/user?page=0&pageSize=15&sortBy",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"admin",
+										"users",
+										"u",
+										"user"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "pageSize",
+											"value": "15"
+										},
+										{
+											"key": "sortBy",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Find Admins By Username",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/admin/users/admins/u/admin?page=0&pageSize=15&sortBy",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"admin",
+										"users",
+										"admins",
+										"u",
+										"admin"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "pageSize",
+											"value": "15"
+										},
+										{
+											"key": "sortBy",
+											"value": null
 										}
 									]
 								}

@@ -12,9 +12,6 @@ import java.util.UUID;
 
 public interface CampaignRepository extends JpaRepository<Campaign, Long> {
 
-//    @Query("SELECT c FROM Campaign c WHERE c.uuid = :campaignUuid")
-//    Campaign findJoinedCampaignByUuid(UUID campaignUuid);
-
     @Query("SELECT c FROM Campaign c JOIN c.players p WHERE c.uuid = :campaignUuid AND p.id = :userId")
     Campaign findJoinedCampaignByUuidAndUserId(UUID campaignUuid, Long userId);
 

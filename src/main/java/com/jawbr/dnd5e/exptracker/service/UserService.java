@@ -5,11 +5,16 @@ import com.jawbr.dnd5e.exptracker.dto.request.UserRequestDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.UserCreationDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.UserDTO;
 import com.jawbr.dnd5e.exptracker.entity.User;
+import com.jawbr.dnd5e.exptracker.exception.IllegalParameterException;
 import com.jawbr.dnd5e.exptracker.exception.IntegrityConstraintViolationException;
 import com.jawbr.dnd5e.exptracker.exception.UserNotFoundException;
 import com.jawbr.dnd5e.exptracker.repository.UserRepository;
 import com.jawbr.dnd5e.exptracker.util.UserRole;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -64,6 +69,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         // By default, all new users are ROLE_USER
         user.setRole(UserRole.ROLE_USER);
+        user.setActive(true);
 
         // In case of duplicated UUID - Chances are extremely low but still checking
         boolean saved = false;
@@ -143,6 +149,139 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found")));
     }
 
-    // TODO - Method for admin to see all users not including admins
-    // TODO - Method for admin to see all admins
+    public Page<UserDTO> adminFindAllUsers(Integer page, Integer pageSize, String sortBy) {
+        page = Optional.ofNullable(page).orElse(0);
+        pageSize = Math.min(Optional.ofNullable(pageSize).orElse(6), 15);
+        String sortByField = Optional.ofNullable(sortBy)
+                .filter(s -> !s.isEmpty())
+                .map(s -> {
+                    switch(s.toLowerCase()) {
+                        case "username" -> {
+                            return "username";
+                        }
+                        case "email" -> {
+                            return "email";
+                        }
+                        case "createdat" -> {
+                            return "createdAt";
+                        }
+                        case "isactive" -> {
+                            return "isActive";
+                        }
+                        default ->
+                                throw new IllegalParameterException(String.format("Parameter '%s' is illegal.", sortBy));
+                    }
+                })
+                .orElse("id");
+
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(sortByField));
+
+        Page<User> users = Optional.of(userRepository.findByRole(UserRole.ROLE_USER, pageable))
+                .filter(list -> !list.isEmpty())
+                .orElseThrow(() -> new UserNotFoundException("No users found."));
+
+        return users.map(userDTOMapper::mapProfileForAdmin);
+    }
+
+    public Page<UserDTO> adminFindAllAdmins(Integer page, Integer pageSize, String sortBy) {
+        page = Optional.ofNullable(page).orElse(0);
+        pageSize = Math.min(Optional.ofNullable(pageSize).orElse(6), 15);
+        String sortByField = Optional.ofNullable(sortBy)
+                .filter(s -> !s.isEmpty())
+                .map(s -> {
+                    switch(s.toLowerCase()) {
+                        case "username" -> {
+                            return "username";
+                        }
+                        case "email" -> {
+                            return "email";
+                        }
+                        case "createdat" -> {
+                            return "createdAt";
+                        }
+                        case "isactive" -> {
+                            return "isActive";
+                        }
+                        default ->
+                                throw new IllegalParameterException(String.format("Parameter '%s' is illegal.", sortBy));
+                    }
+                })
+                .orElse("id");
+
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(sortByField));
+
+        Page<User> users = Optional.of(userRepository.findByRole(UserRole.ROLE_ADMIN, pageable))
+                .filter(list -> !list.isEmpty())
+                .orElseThrow(() -> new UserNotFoundException("No admins found."));
+
+        return users.map(userDTOMapper::mapProfileForAdmin);
+    }
+
+    public Page<UserDTO> adminFindUsersByUsername(Integer page, Integer pageSize, String sortBy, String keyword) {
+        page = Optional.ofNullable(page).orElse(0);
+        pageSize = Math.min(Optional.ofNullable(pageSize).orElse(6), 15);
+        String sortByField = Optional.ofNullable(sortBy)
+                .filter(s -> !s.isEmpty())
+                .map(s -> {
+                    switch(s.toLowerCase()) {
+                        case "username" -> {
+                            return "username";
+                        }
+                        case "email" -> {
+                            return "email";
+                        }
+                        case "createdat" -> {
+                            return "createdAt";
+                        }
+                        case "isactive" -> {
+                            return "isActive";
+                        }
+                        default ->
+                                throw new IllegalParameterException(String.format("Parameter '%s' is illegal.", sortBy));
+                    }
+                })
+                .orElse("id");
+
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(sortByField));
+
+        Page<User> users = Optional.of(userRepository.findByUsernameContainingAndRole(keyword, pageable, UserRole.ROLE_USER))
+                .filter(list -> !list.isEmpty())
+                .orElseThrow(() -> new UserNotFoundException(String.format("No users with username '%s' was found.", keyword)));
+
+        return users.map(userDTOMapper::mapProfileForAdmin);
+    }
+
+    public Page<UserDTO> adminFindAdminsByUsername(Integer page, Integer pageSize, String sortBy, String keyword) {
+        page = Optional.ofNullable(page).orElse(0);
+        pageSize = Math.min(Optional.ofNullable(pageSize).orElse(6), 15);
+        String sortByField = Optional.ofNullable(sortBy)
+                .filter(s -> !s.isEmpty())
+                .map(s -> {
+                    switch(s.toLowerCase()) {
+                        case "username" -> {
+                            return "username";
+                        }
+                        case "email" -> {
+                            return "email";
+                        }
+                        case "createdat" -> {
+                            return "createdAt";
+                        }
+                        case "isactive" -> {
+                            return "isActive";
+                        }
+                        default ->
+                                throw new IllegalParameterException(String.format("Parameter '%s' is illegal.", sortBy));
+                    }
+                })
+                .orElse("id");
+
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(sortByField));
+
+        Page<User> users = Optional.of(userRepository.findByUsernameContainingAndRole(keyword, pageable, UserRole.ROLE_ADMIN))
+                .filter(list -> !list.isEmpty())
+                .orElseThrow(() -> new UserNotFoundException(String.format("No admins with username '%s' was found.", keyword)));
+
+        return users.map(userDTOMapper::mapProfileForAdmin);
+    }
 }

@@ -9,6 +9,7 @@ import com.jawbr.dnd5e.exptracker.service.ClassService;
 import com.jawbr.dnd5e.exptracker.service.RaceService;
 import com.jawbr.dnd5e.exptracker.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -111,4 +112,47 @@ public class AdminController {
     public UserDTO checkUserProfile(@PathVariable UUID userUuid) {
         return userService.adminCheckUserProfile(userUuid);
     }
+
+    @GetMapping("/users")
+    public Page<UserDTO> findAllUsers(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String sortBy
+    )
+    {
+        return userService.adminFindAllUsers(page, pageSize, sortBy);
+    }
+
+    @GetMapping("/users/u/{username}")
+    public Page<UserDTO> findUsersByUsername(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String sortBy,
+            @PathVariable String username
+    )
+    {
+        return userService.adminFindUsersByUsername(page, pageSize, sortBy, username);
+    }
+
+    @GetMapping("/users/admins")
+    public Page<UserDTO> findAllAdmins(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String sortBy
+    )
+    {
+        return userService.adminFindAllAdmins(page, pageSize, sortBy);
+    }
+
+    @GetMapping("/users/admins/u/{username}")
+    public Page<UserDTO> findAdminsByUsername(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String sortBy,
+            @PathVariable String username
+    )
+    {
+        return userService.adminFindAdminsByUsername(page, pageSize, sortBy, username);
+    }
+
 }

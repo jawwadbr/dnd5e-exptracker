@@ -1,11 +1,16 @@
 package com.jawbr.dnd5e.exptracker.controller;
 
+import com.jawbr.dnd5e.exptracker.dto.request.CampaignRequestDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.CampaignDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.CampaignPlayersDTO;
+import com.jawbr.dnd5e.exptracker.dto.response.InviteCodeDTO;
 import com.jawbr.dnd5e.exptracker.service.CampaignService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,5 +61,15 @@ public class CampaignController {
     @GetMapping("/me/joined/players/{campaignUuid}")
     public List<CampaignPlayersDTO> findAllJoinedPlayersOnCampaign(@PathVariable UUID campaignUuid) {
         return campaignService.findAllJoinedPlayersOnCampaign(campaignUuid);
+    }
+
+    @PostMapping("/me")
+    public CampaignDTO createCampaign(@Valid @RequestBody CampaignRequestDTO campaignRequestDTO) {
+        return campaignService.createCampaign(campaignRequestDTO);
+    }
+
+    @PostMapping("/me/generate-invite/{campaignUuid}")
+    public InviteCodeDTO generateInviteCodeForCampaign(@PathVariable UUID campaignUuid) {
+        return campaignService.generateInviteCodeForCampaign(campaignUuid);
     }
 }

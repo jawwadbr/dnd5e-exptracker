@@ -1,5 +1,6 @@
 package com.jawbr.dnd5e.exptracker.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -61,5 +62,8 @@ public class Campaign {
     @ManyToOne
     @JoinColumn(name = "creator_user_id")
     private User creator;
+
+    @OneToMany(mappedBy = "campaign", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<InviteCode> inviteCodes;
 
 }

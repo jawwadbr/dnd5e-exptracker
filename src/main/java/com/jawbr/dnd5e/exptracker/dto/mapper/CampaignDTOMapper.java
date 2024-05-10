@@ -2,9 +2,11 @@ package com.jawbr.dnd5e.exptracker.dto.mapper;
 
 import com.jawbr.dnd5e.exptracker.dto.response.CampaignDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.CampaignPlayersDTO;
+import com.jawbr.dnd5e.exptracker.dto.response.InviteCodeDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.PlayerCharacterDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.UserDTO;
 import com.jawbr.dnd5e.exptracker.entity.Campaign;
+import com.jawbr.dnd5e.exptracker.entity.InviteCode;
 import com.jawbr.dnd5e.exptracker.entity.PlayerCharacter;
 import com.jawbr.dnd5e.exptracker.entity.User;
 import com.jawbr.dnd5e.exptracker.util.ExperiencePointsTable;
@@ -22,6 +24,16 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
     public CampaignDTO apply(Campaign campaign) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss a");
+
+        List<InviteCodeDTO> inviteCodes = new ArrayList<>();
+        if(campaign.getInviteCodes() != null) {
+            for(InviteCode code : campaign.getInviteCodes()) {
+                inviteCodes.add(InviteCodeDTO.builder()
+                        .code(code.getCode())
+                        .expiry_date(code.getExpiryDate().format(formatter))
+                        .build());
+            }
+        }
 
         List<PlayerCharacterDTO> activePlayerCharacterReferenceDTOS = new ArrayList<>();
         List<PlayerCharacterDTO> inactivePlayerCharacterReferenceDTOS = new ArrayList<>();
@@ -65,6 +77,7 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
                 .description(campaign.getDescription())
                 .public_campaign_uuid(campaign.getUuid().toString())
                 .created_at(campaign.getCreatedAt() != null ? campaign.getCreatedAt().format(formatter) + " UTC" : null)
+                .invite_codes(inviteCodes)
                 .campaign_creator(CampaignDTO.CampaignCreatorDTO.builder()
                         .username(campaign.getCreator().getUsername())
                         .public_uuid(campaign.getCreator().getUuid().toString())
@@ -87,10 +100,24 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
     }
 
     public CampaignDTO mapCreatedCampaignsToDTO(Campaign campaign) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss a");
+
+        List<InviteCodeDTO> inviteCodes = new ArrayList<>();
+        if(campaign.getInviteCodes() != null) {
+            for(InviteCode code : campaign.getInviteCodes()) {
+                inviteCodes.add(InviteCodeDTO.builder()
+                        .code(code.getCode())
+                        .expiry_date(code.getExpiryDate().format(formatter))
+                        .build());
+            }
+        }
+
         return CampaignDTO.builder()
                 .name(campaign.getName())
                 .description(campaign.getDescription())
                 .public_campaign_uuid(campaign.getUuid().toString())
+                .invite_codes(inviteCodes)
                 .build();
     }
 

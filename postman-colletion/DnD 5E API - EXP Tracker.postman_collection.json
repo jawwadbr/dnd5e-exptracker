@@ -180,6 +180,35 @@
 			"name": "CampaignController",
 			"item": [
 				{
+					"name": "Create Campaign",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"created\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/campaigns",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"campaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Joined",
 					"request": {
 						"method": "GET",
@@ -288,6 +317,29 @@
 								"joined",
 								"players",
 								"3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Invite Code for Campaign",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/campaigns/me/generate-invite/3f2877a0-4a2b-4e5d-8b5e-3b5a07859a04",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"campaigns",
+								"me",
+								"generate-invite",
+								"3f2877a0-4a2b-4e5d-8b5e-3b5a07859a04"
 							]
 						}
 					},

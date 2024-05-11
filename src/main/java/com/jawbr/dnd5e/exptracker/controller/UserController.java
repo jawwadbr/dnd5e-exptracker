@@ -46,7 +46,7 @@ public class UserController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteUser(
-            @RequestParam(required = true, defaultValue = "false") boolean isConfirmed)
+            @RequestParam(defaultValue = "false") boolean isConfirmed)
     {
         userService.deleteUser(isConfirmed);
         return ResponseEntity.noContent().build();

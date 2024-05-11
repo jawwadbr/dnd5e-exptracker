@@ -83,7 +83,7 @@ public class AdminController {
 
     @DeleteMapping("/users/{userUuid}")
     public ResponseEntity<Void> deleteUserByUuid(
-            @RequestParam(required = true, defaultValue = "false") boolean isConfirmed,
+            @RequestParam(defaultValue = "false") boolean isConfirmed,
             @PathVariable UUID userUuid)
     {
         userService.adminDeleteUser(isConfirmed, userUuid);
@@ -92,7 +92,7 @@ public class AdminController {
 
     @PutMapping("/users/deactivate/{userUuid}")
     public ResponseEntity<Void> deactivateUser(
-            @RequestParam(required = true, defaultValue = "false") boolean isConfirmed,
+            @RequestParam(defaultValue = "false") boolean isConfirmed,
             @PathVariable UUID userUuid)
     {
         userService.adminDeactivateUser(isConfirmed, userUuid);
@@ -101,7 +101,7 @@ public class AdminController {
 
     @PutMapping("/users/reactivate/{userUuid}")
     public ResponseEntity<Void> reactivateUser(
-            @RequestParam(required = true, defaultValue = "false") boolean isConfirmed,
+            @RequestParam(defaultValue = "false") boolean isConfirmed,
             @PathVariable UUID userUuid)
     {
         userService.adminReactivateUser(isConfirmed, userUuid);

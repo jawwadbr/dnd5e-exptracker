@@ -11,4 +11,6 @@ public interface InviteCodeRepository extends JpaRepository<InviteCode, Long> {
     List<InviteCode> findByExpiryDateBefore(LocalDateTime time);
 
     boolean existsByCode(String code);
+
+    InviteCode findByCode(String code);
 }

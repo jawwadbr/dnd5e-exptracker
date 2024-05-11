@@ -11,6 +11,7 @@ import com.jawbr.dnd5e.exptracker.entity.InviteCode;
 import com.jawbr.dnd5e.exptracker.entity.User;
 import com.jawbr.dnd5e.exptracker.exception.CampaignNotFoundException;
 import com.jawbr.dnd5e.exptracker.exception.IllegalParameterException;
+import com.jawbr.dnd5e.exptracker.exception.InviteCodeNotFoundException;
 import com.jawbr.dnd5e.exptracker.repository.CampaignRepository;
 import com.jawbr.dnd5e.exptracker.repository.InviteCodeRepository;
 import com.jawbr.dnd5e.exptracker.util.InviteCodeGenerator;
@@ -25,6 +26,8 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.jawbr.dnd5e.exptracker.util.CheckRequestConfirmation.checkConfirmation;
 
 @Service
 public class CampaignService {
@@ -106,7 +109,7 @@ public class CampaignService {
                 .filter(list -> !list.isEmpty())
                 .orElseThrow(() -> new CampaignNotFoundException("Campaign or players not found, or user not a participant."));
 
-        return users.stream().map(campaignDTOMapper::mapAllJoinedPlayersOnCampaignToDTO).toList();
+        return users.stream().map(user -> campaignDTOMapper.mapAllJoinedPlayersOnCampaignToDTO(user, campaignUuid)).toList();
     }
 
     /*
@@ -114,18 +117,57 @@ public class CampaignService {
      * TODO - User update campaign
      * TODO - User delete campaign
      * User owner of campaign create invite code
-     * TODO - User join campaign using invite code
-     * TODO - User leave campaign
+     * User join campaign using invite code
+     * User leave campaign
      * TODO - User owner of campaign give all players XP (Can include inactive players if wanted)
      * TODO - User owner of campaign give XP to a single player using UUID (including inactive players)
      */
 
+    public Page<CampaignDTO> leaveCampaign(UUID campaignUuid, boolean isConfirmed) {
+        checkConfirmation(isConfirmed);
+
+        User user = currentAuthUser.getCurrentAuthUser();
+
+        Campaign campaign = Optional.ofNullable(
+                        campaignRepository.findJoinedCampaignByUuidAndUserId(campaignUuid, user.getId()))
+                .orElseThrow(() -> new CampaignNotFoundException("Campaign not found."));
+
+        if(campaign.getCreator().equals(user)) {
+            campaignRepository.delete(campaign);
+            return findJoinedCampaigns(0, 16, null);
+        }
+
+        campaign.getPlayers().remove(user);
+
+        campaignRepository.save(campaign);
+
+        return findJoinedCampaigns(0, 16, null);
+    }
+
+    public CampaignDTO joinCampaign(String inviteCode) {
+
+        InviteCode invite = Optional.ofNullable(inviteCodeRepository.findByCode(inviteCode))
+                .orElseThrow(() -> new InviteCodeNotFoundException("Invalid invite code."));
+
+        User user = currentAuthUser.getCurrentAuthUser();
+
+        Campaign campaign = invite.getCampaign();
+
+        campaign.getPlayers().add(user);
+
+        campaignRepository.save(campaign);
+
+        return campaignDTOMapper.apply(campaign);
+    }
+
     public CampaignDTO createCampaign(CampaignRequestDTO campaignRequestDTO) {
+        User user = currentAuthUser.getCurrentAuthUser();
         Campaign campaign = Campaign.builder()
-                .creator(currentAuthUser.getCurrentAuthUser())
+                .creator(user)
                 .name(campaignRequestDTO.name())
                 .description(StringUtils.hasText(campaignRequestDTO.description()) ? campaignRequestDTO.description() : "")
                 .build();
+        campaign.setPlayers(List.of(user));
 
         // Generate one invite code when creating a campaign
         InviteCode code = new InviteCode();

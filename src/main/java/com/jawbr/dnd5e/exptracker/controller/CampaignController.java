@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -71,5 +72,18 @@ public class CampaignController {
     @PostMapping("/me/generate-invite/{campaignUuid}")
     public InviteCodeDTO generateInviteCodeForCampaign(@PathVariable UUID campaignUuid) {
         return campaignService.generateInviteCodeForCampaign(campaignUuid);
+    }
+
+    @PutMapping("/me/join/invite-code/{inviteCode}")
+    public CampaignDTO joinCampaign(@PathVariable String inviteCode) {
+        return campaignService.joinCampaign(inviteCode);
+    }
+
+    @PutMapping("/me/leave/{campaignUuid}")
+    public Page<CampaignDTO> leaveCampaign(
+            @PathVariable UUID campaignUuid,
+            @RequestParam(defaultValue = "false") boolean isConfirmed)
+    {
+        return campaignService.leaveCampaign(campaignUuid, isConfirmed);
     }
 }

@@ -17,7 +17,7 @@ public class InviteCodeDTOMapper implements Function<InviteCode, InviteCodeDTO> 
 
         return InviteCodeDTO.builder()
                 .code(code.getCode())
-                .expiry_date(code.getExpiryDate().format(formatter))
+                .expiry_date(code.getExpiryDate().format(formatter) + " UTC")
                 .campaign(CampaignDTO.builder()
                         .name(code.getCampaign().getName())
                         .campaign_creator(CampaignDTO.CampaignCreatorDTO.builder()

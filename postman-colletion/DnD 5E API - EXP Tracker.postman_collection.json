@@ -349,7 +349,7 @@
 				{
 					"name": "Join Campaign with Invite Code",
 					"request": {
-						"method": "PUT",
+						"method": "POST",
 						"header": [],
 						"url": {
 							"raw": "http://localhost:8080/api/campaigns/me/join/invite-code/ZDeHFcL4WT",

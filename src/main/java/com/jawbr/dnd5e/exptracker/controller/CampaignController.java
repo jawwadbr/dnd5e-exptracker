@@ -74,7 +74,7 @@ public class CampaignController {
         return campaignService.generateInviteCodeForCampaign(campaignUuid);
     }
 
-    @PutMapping("/me/join/invite-code/{inviteCode}")
+    @PostMapping("/me/join/invite-code/{inviteCode}")
     public CampaignDTO joinCampaign(@PathVariable String inviteCode) {
         return campaignService.joinCampaign(inviteCode);
     }

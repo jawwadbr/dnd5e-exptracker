@@ -186,7 +186,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\" : \"created\"\r\n}",
+							"raw": "{\r\n    \"name\" : \"Eldoria\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -194,7 +194,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/campaigns",
+							"raw": "http://localhost:8080/api/campaigns/me",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -202,7 +202,8 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"campaigns"
+								"campaigns",
+								"me"
 							]
 						}
 					},
@@ -340,6 +341,69 @@
 								"me",
 								"generate-invite",
 								"3f2877a0-4a2b-4e5d-8b5e-3b5a07859a04"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Join Campaign with Invite Code",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/campaigns/me/join/invite-code/ZDeHFcL4WT",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"campaigns",
+								"me",
+								"join",
+								"invite-code",
+								"ZDeHFcL4WT"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Leave Campaign By UUID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJleHAiOjE3MTU0MTYyODB9.pXUgSjX6puwwmsvsICUZo46joHe9EsMcvDt2f0vut9DSTQA0zsSBmxD1Ui6m9C7kjMx5s3GsTgnX3Cq0VXADdg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/campaigns/me/leave/3f2877a0-4a2b-4e5d-8b5e-3b5a07859a04?isConfirmed=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"campaigns",
+								"me",
+								"leave",
+								"3f2877a0-4a2b-4e5d-8b5e-3b5a07859a04"
+							],
+							"query": [
+								{
+									"key": "isConfirmed",
+									"value": "true"
+								}
 							]
 						}
 					},

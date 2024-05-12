@@ -50,9 +50,9 @@ public class PlayerCharacterService {
     }
 
     /*
-     * User create a character
-     * User can turn his character inactive (Owner can turn a character inactive too)
-     * User delete his character (Owner can delete characters too)
-     * User edit his character (Owner can edit character too)
+     * TODO - User create a character
+     * TODO - User can turn his character inactive (Owner can turn a character inactive too)
+     * TODO - User delete his character (Owner can delete characters too)
+     * TODO - User edit his character (Owner can edit character too)
      */
 }

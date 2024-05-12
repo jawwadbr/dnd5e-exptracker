@@ -56,7 +56,7 @@ public class Campaign {
     )
     private List<User> players;
 
-    @OneToMany(mappedBy = "campaign", orphanRemoval = true)
+    @OneToMany(mappedBy = "campaign", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<PlayerCharacter> playerCharacters;
 
     @ManyToOne

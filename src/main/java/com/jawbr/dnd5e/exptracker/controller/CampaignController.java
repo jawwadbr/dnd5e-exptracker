@@ -8,6 +8,8 @@ import com.jawbr.dnd5e.exptracker.dto.response.InviteCodeDTO;
 import com.jawbr.dnd5e.exptracker.service.CampaignService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -86,5 +88,24 @@ public class CampaignController {
             @RequestParam(defaultValue = "false") boolean isConfirmed)
     {
         return campaignService.leaveCampaign(campaignUuid, isConfirmed);
+    }
+
+    @DeleteMapping("/me/{campaignUuid}")
+    public ResponseEntity<Void> deleteCampaign(
+            @PathVariable UUID campaignUuid,
+            @RequestParam(defaultValue = "false") boolean isConfirmed)
+    {
+        campaignService.deleteCampaign(campaignUuid, isConfirmed);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/me/remove-player")
+    public ResponseEntity<Void> removePlayerFromCampaign(
+            @RequestParam(defaultValue = "false") boolean isConfirmed,
+            @RequestParam UUID campaignUuid,
+            @RequestParam UUID userUuid)
+    {
+        campaignService.removePlayerFromCampaign(campaignUuid, userUuid, isConfirmed);
+        return ResponseEntity.noContent().build();
     }
 }

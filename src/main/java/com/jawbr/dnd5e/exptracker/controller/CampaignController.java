@@ -3,6 +3,7 @@ package com.jawbr.dnd5e.exptracker.controller;
 import com.jawbr.dnd5e.exptracker.dto.request.CampaignRequestDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.CampaignDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.CampaignPlayersDTO;
+import com.jawbr.dnd5e.exptracker.dto.response.GenericMessageResponseDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.InviteCodeDTO;
 import com.jawbr.dnd5e.exptracker.service.CampaignService;
 import jakarta.validation.Valid;
@@ -80,7 +81,7 @@ public class CampaignController {
     }
 
     @PutMapping("/me/leave/{campaignUuid}")
-    public Page<CampaignDTO> leaveCampaign(
+    public GenericMessageResponseDTO leaveCampaign(
             @PathVariable UUID campaignUuid,
             @RequestParam(defaultValue = "false") boolean isConfirmed)
     {

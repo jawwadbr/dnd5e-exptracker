@@ -5,6 +5,7 @@ import com.jawbr.dnd5e.exptracker.dto.mapper.InviteCodeDTOMapper;
 import com.jawbr.dnd5e.exptracker.dto.request.CampaignRequestDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.CampaignDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.CampaignPlayersDTO;
+import com.jawbr.dnd5e.exptracker.dto.response.GenericMessageResponseDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.InviteCodeDTO;
 import com.jawbr.dnd5e.exptracker.entity.Campaign;
 import com.jawbr.dnd5e.exptracker.entity.InviteCode;
@@ -123,7 +124,7 @@ public class CampaignService {
      * TODO - User owner of campaign give XP to a single player using UUID (including inactive players)
      */
 
-    public Page<CampaignDTO> leaveCampaign(UUID campaignUuid, boolean isConfirmed) {
+    public GenericMessageResponseDTO leaveCampaign(UUID campaignUuid, boolean isConfirmed) {
         checkConfirmation(isConfirmed);
 
         User user = currentAuthUser.getCurrentAuthUser();
@@ -134,14 +135,18 @@ public class CampaignService {
 
         if(campaign.getCreator().equals(user)) {
             campaignRepository.delete(campaign);
-            return findJoinedCampaigns(0, 16, null);
+            return GenericMessageResponseDTO.builder()
+                    .message("You have successfully left and deleted the campaign.")
+                    .build();
         }
 
         campaign.getPlayers().remove(user);
 
         campaignRepository.save(campaign);
 
-        return findJoinedCampaigns(0, 16, null);
+        return GenericMessageResponseDTO.builder()
+                .message("You have successfully left the campaign.")
+                .build();
     }
 
     public CampaignDTO joinCampaign(String inviteCode) {

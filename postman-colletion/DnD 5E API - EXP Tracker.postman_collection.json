@@ -373,20 +373,10 @@
 				{
 					"name": "Leave Campaign By UUID",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJleHAiOjE3MTU0MTYyODB9.pXUgSjX6puwwmsvsICUZo46joHe9EsMcvDt2f0vut9DSTQA0zsSBmxD1Ui6m9C7kjMx5s3GsTgnX3Cq0VXADdg",
-									"type": "string"
-								}
-							]
-						},
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/campaigns/me/leave/3f2877a0-4a2b-4e5d-8b5e-3b5a07859a04?isConfirmed=true",
+							"raw": "http://localhost:8080/api/campaigns/me/leave/3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03?isConfirmed=true",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -397,12 +387,76 @@
 								"campaigns",
 								"me",
 								"leave",
-								"3f2877a0-4a2b-4e5d-8b5e-3b5a07859a04"
+								"3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03"
 							],
 							"query": [
 								{
 									"key": "isConfirmed",
 									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Campaign",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/campaigns/me/3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03?isConfirmed=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"campaigns",
+								"me",
+								"3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03"
+							],
+							"query": [
+								{
+									"key": "isConfirmed",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Player from Campagin",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/campaigns/me/remove-player?isConfirmed=true&campaignUuid=3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03&userUuid=3f2877a0-4a2b-4e5d-8b5e-3b5a07859a10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"campaigns",
+								"me",
+								"remove-player"
+							],
+							"query": [
+								{
+									"key": "isConfirmed",
+									"value": "true"
+								},
+								{
+									"key": "campaignUuid",
+									"value": "3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03"
+								},
+								{
+									"key": "userUuid",
+									"value": "3f2877a0-4a2b-4e5d-8b5e-3b5a07859a10"
 								}
 							]
 						}

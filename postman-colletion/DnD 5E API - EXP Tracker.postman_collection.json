@@ -462,6 +462,37 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Update Campaign",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"updated\",\r\n    \"description\" : \"descr\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/campaigns/me/3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"campaigns",
+								"me",
+								"3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

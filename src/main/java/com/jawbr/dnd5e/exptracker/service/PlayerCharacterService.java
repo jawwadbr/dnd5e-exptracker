@@ -50,9 +50,13 @@ public class PlayerCharacterService {
     }
 
     /*
-     * TODO - User create a character
-     * TODO - User can turn his character inactive (Owner can turn a character inactive too)
-     * TODO - User delete his character (Owner can delete characters too)
-     * TODO - User edit his character (Owner can edit character too)
+     *  TODO - User create a character
+     *  TODO - User can turn his character inactive (Owner can turn a character inactive too)
+     *  TODO - User delete his character (Owner can delete characters too)
+     *  TODO - User edit his character (Owner can edit character too)
+     *  TODO - User owner of campaign give all players XP (Can include inactive players if wanted)
+     *  TODO - User owner of campaign give XP to a single player using UUID (including inactive players)
+     *  TODO - User owner of campaign remove XP from all players (Can include inactive players if wanted)
+     *  TODO - User owner of campaign remove XP from a single player using UUID (Can include inactive players if wanted)
      */
 }

@@ -115,15 +115,33 @@ public class CampaignService {
 
     /*
      * User create campaign
-     * TODO - User update campaign
+     * User update campaign
      * User delete campaign
      * User owner of campaign create invite code
      * User join campaign using invite code
      * User leave campaign
      * User owner can remove a player from the campaign
-     * TODO - User owner of campaign give all players XP (Can include inactive players if wanted)
-     * TODO - User owner of campaign give XP to a single player using UUID (including inactive players)
      */
+
+    public CampaignDTO updateCampaign(CampaignRequestDTO campaignRequestDTO, UUID campaignUuid) {
+        User user = currentAuthUser.getCurrentAuthUser();
+
+        Campaign campaign = Optional.ofNullable(
+                        campaignRepository.findCreatedCampaignByUuidAndUserId(campaignUuid, user.getId()))
+                .orElseThrow(() -> new CampaignNotFoundException("Campaign not found."));
+
+        final String name = StringUtils.hasText(campaignRequestDTO.name())
+                ? campaignRequestDTO.name() : campaign.getName();
+        final String description = StringUtils.hasText(campaignRequestDTO.description())
+                ? campaignRequestDTO.description() : campaign.getDescription();
+
+        campaign.setName(name);
+        campaign.setDescription(description);
+
+        campaign = campaignRepository.save(campaign);
+
+        return campaignDTOMapper.apply(campaign);
+    }
 
     public void removePlayerFromCampaign(UUID campaignUuid, UUID userUuid, boolean isConfirmed) {
         checkConfirmation(isConfirmed);

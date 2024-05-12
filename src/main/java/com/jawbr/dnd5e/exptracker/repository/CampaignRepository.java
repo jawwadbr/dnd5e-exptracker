@@ -27,4 +27,6 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long> {
     @Query("SELECT p FROM Campaign c JOIN c.players p, User u WHERE c.uuid = :campaignUuid AND u.id = :userId AND u MEMBER OF c.players")
     List<User> findAllJoinedPlayersOnCampaign(UUID campaignUuid, Long userId);
 
+    Campaign findByUuid(UUID campaignUuid);
+
 }

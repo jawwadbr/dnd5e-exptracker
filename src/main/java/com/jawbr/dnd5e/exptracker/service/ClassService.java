@@ -65,11 +65,6 @@ public class ClassService {
 
     /*
      * ADMIN ENDPOINTS
-     *
-     * ADD MORE CLASSES
-     * DELETE CLASSES
-     * EDIT CLASSES
-     *
      */
 
     public ClassDTO saveClass(ClassRequestDTO classRequestDTO) {

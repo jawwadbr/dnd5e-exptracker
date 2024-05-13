@@ -543,6 +543,74 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Create PC",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Jonas\",\r\n    \"char_class\": \"paladin\",\r\n    \"char_race\": \"human\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/player-characters/me/create/3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"player-characters",
+								"me",
+								"create",
+								"3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete PC",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/player-characters/me?campaignUuid=3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03&characterUuid=17c3b1f1-22dd-4251-94ad-3833b3d215a8&isConfirmed=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"player-characters",
+								"me"
+							],
+							"query": [
+								{
+									"key": "campaignUuid",
+									"value": "3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03",
+									"description": "Optional, only used for the owner side"
+								},
+								{
+									"key": "characterUuid",
+									"value": "17c3b1f1-22dd-4251-94ad-3833b3d215a8"
+								},
+								{
+									"key": "isConfirmed",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -41,6 +42,13 @@ public class GenericExceptionHandler {
         BindingResult result = exc.getBindingResult();
         String message = Objects.requireNonNull(result.getFieldError()).getDefaultMessage();
         ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), message);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> handleException(MissingServletRequestParameterException ex) {
+        String errorMessage = "Required request parameter '" + ex.getParameterName() + "' is missing";
+        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), errorMessage);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }

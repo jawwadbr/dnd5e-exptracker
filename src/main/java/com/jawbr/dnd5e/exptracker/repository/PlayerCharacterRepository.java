@@ -20,4 +20,6 @@ public interface PlayerCharacterRepository extends JpaRepository<PlayerCharacter
     List<PlayerCharacter> findByPlayerRace(Race race);
 
     List<PlayerCharacter> findByPlayerCharClass(Class theClass);
+
+    PlayerCharacter findByUuid(UUID characterUuid);
 }

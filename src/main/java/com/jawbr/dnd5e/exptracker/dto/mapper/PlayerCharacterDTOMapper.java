@@ -28,6 +28,7 @@ public class PlayerCharacterDTOMapper implements Function<PlayerCharacter, Playe
                                 .build())
                         .build())
                 .player_character_public_uuid(playerCharacter.getUuid().toString())
+                .active(playerCharacter.isActive())
                 .build();
     }
 }

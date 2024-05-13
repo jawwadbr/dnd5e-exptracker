@@ -22,4 +22,7 @@ public interface PlayerCharacterRepository extends JpaRepository<PlayerCharacter
     List<PlayerCharacter> findByPlayerCharClass(Class theClass);
 
     PlayerCharacter findByUuid(UUID characterUuid);
+
+    @Query("SELECT pc FROM PlayerCharacter pc JOIN pc.campaign c WHERE pc.uuid = :characterUuid AND c.uuid = :campaignUuid AND c.creator.id = :userId")
+    PlayerCharacter findPlayerCharacterByUuidInCampaign(UUID characterUuid, UUID campaignUuid, Long userId);
 }

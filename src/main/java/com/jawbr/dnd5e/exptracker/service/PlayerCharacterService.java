@@ -94,7 +94,10 @@ public class PlayerCharacterService {
 
         PlayerCharacter playerCharacterToDelete;
         if(isOwner) {
-            playerCharacterToDelete = Optional.ofNullable(playerCharacterRepository.findByUuid(characterUuid))
+            playerCharacterToDelete = Optional.ofNullable(playerCharacterRepository.findPlayerCharacterByUuidInCampaign(
+                            characterUuid,
+                            campaignUuid,
+                            user.getId()))
                     .orElseThrow(() -> new PlayerCharacterNotFoundException("No player character found."));
         }
         else {

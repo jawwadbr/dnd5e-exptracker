@@ -1,6 +1,7 @@
 package com.jawbr.dnd5e.exptracker.exception.handler;
 
 import com.jawbr.dnd5e.exptracker.exception.IllegalParameterException;
+import com.jawbr.dnd5e.exptracker.exception.InsufficientPermissionException;
 import com.jawbr.dnd5e.exptracker.exception.IntegrityConstraintViolationException;
 import com.jawbr.dnd5e.exptracker.exception.errorResponse.ErrorResponse;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -50,5 +51,11 @@ public class GenericExceptionHandler {
         String errorMessage = "Required request parameter '" + ex.getParameterName() + "' is missing";
         ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), errorMessage);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(InsufficientPermissionException exc) {
+        ErrorResponse error = new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), exc.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 }

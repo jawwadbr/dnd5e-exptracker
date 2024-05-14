@@ -1,6 +1,7 @@
 package com.jawbr.dnd5e.exptracker.controller;
 
 import com.jawbr.dnd5e.exptracker.dto.request.PlayerCharacterRequestDTO;
+import com.jawbr.dnd5e.exptracker.dto.response.CampaignDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.PlayerCharacterDTO;
 import com.jawbr.dnd5e.exptracker.service.PlayerCharacterService;
 import jakarta.validation.Valid;
@@ -73,5 +74,15 @@ public class PlayerCharacterController {
             @RequestBody PlayerCharacterRequestDTO playerCharacterRequestDTO)
     {
         return playerCharacterService.updatePlayerCharacter(playerCharacterRequestDTO, characterUuid, campaignUuid);
+    }
+
+    @PutMapping("/me/xp")
+    public CampaignDTO adjustExperience(
+            @RequestParam UUID campaignUuid,
+            @RequestParam(required = false) UUID characterUuid,
+            @RequestParam int xp_value,
+            @RequestParam(defaultValue = "false") boolean include_inactive
+    ) {
+        return playerCharacterService.adjustExperience(xp_value, characterUuid, campaignUuid, include_inactive);
     }
 }

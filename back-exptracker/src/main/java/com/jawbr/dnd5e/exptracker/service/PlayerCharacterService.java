@@ -2,6 +2,7 @@ package com.jawbr.dnd5e.exptracker.service;
 
 import com.jawbr.dnd5e.exptracker.dto.mapper.PlayerCharacterDTOMapper;
 import com.jawbr.dnd5e.exptracker.dto.request.PlayerCharacterRequestDTO;
+import com.jawbr.dnd5e.exptracker.dto.response.CampaignDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.PlayerCharacterDTO;
 import com.jawbr.dnd5e.exptracker.entity.Campaign;
 import com.jawbr.dnd5e.exptracker.entity.Class;
@@ -10,6 +11,7 @@ import com.jawbr.dnd5e.exptracker.entity.Race;
 import com.jawbr.dnd5e.exptracker.entity.User;
 import com.jawbr.dnd5e.exptracker.exception.CampaignNotFoundException;
 import com.jawbr.dnd5e.exptracker.exception.ClassNotFoundException;
+import com.jawbr.dnd5e.exptracker.exception.InsufficientPermissionException;
 import com.jawbr.dnd5e.exptracker.exception.PlayerCharacterNotFoundException;
 import com.jawbr.dnd5e.exptracker.exception.RaceNotFoundException;
 import com.jawbr.dnd5e.exptracker.repository.ClassRepository;
@@ -71,17 +73,49 @@ public class PlayerCharacterService {
         return playerCharacterDTOMapper.apply(playerCharacter);
     }
 
-    /*
-     *  User create a character
-     *  User can turn his character inactive (Owner can turn a character inactive too)
-     *  User delete his character (Owner can delete characters too)
-     *  User edit his character (Owner can edit character too)
-     *  TODO - User owner of campaign give all players XP (Can include inactive players if wanted)
-     *  TODO - User owner of campaign give XP to a single player using UUID (including inactive players)
-     *  TODO - User owner of campaign remove XP from all players (Can include inactive players if wanted)
-     *  TODO - User owner of campaign remove XP from a single player using UUID (Can include inactive players if wanted)
-     */
+    // User owner of campaign adjust XP based on parameters
+    public CampaignDTO adjustExperience(int xpValue, UUID characterUuid, UUID campaignUuid, boolean includeInactive) {
+        User user = currentAuthUserService.getCurrentAuthUser();
 
+        Campaign campaign = user.getCreatedCampaigns().stream()
+                .filter(c -> c.getUuid().equals(campaignUuid))
+                .findFirst()
+                .orElseThrow(() -> new CampaignNotFoundException("Campaign not found."));
+
+        if(!campaign.getCreator().equals(user)) {
+            throw new InsufficientPermissionException("Insufficient Permission. You are not the creator.");
+        }
+
+        List<PlayerCharacter> playerCharacterList = campaign.getPlayerCharacters();
+        // If there is no characterUuid then all character receives the xp adjust and if includeInactive is true it includes the inactive chars too
+        if(!playerCharacterList.isEmpty()) {
+            if(characterUuid == null) {
+                playerCharacterList.forEach(pc -> {
+                    if(includeInactive || pc.isActive()) {
+                        pc.setExperiencePoints(pc.getExperiencePoints() + xpValue);
+                    }
+                });
+            }
+            else { // If there is characterUuid then only that char receives the xp adjust, does not need the includeInactive
+                PlayerCharacter pc = playerCharacterList.stream()
+                        .filter(aChar -> aChar.getUuid().equals(characterUuid))
+                        .findFirst()
+                        .orElseThrow(() -> new PlayerCharacterNotFoundException("Player Character not found."));
+                pc.setExperiencePoints(pc.getExperiencePoints() + xpValue);
+            }
+        }
+        else {
+            throw new PlayerCharacterNotFoundException("No player characters in the campaign.");
+        }
+
+        for(PlayerCharacter pcUpdated : playerCharacterList) {
+            playerCharacterRepository.save(pcUpdated);
+        }
+
+        return playerCharacterDTOMapper.mapAdjustedExpCharactersToCampaign(campaign);
+    }
+
+    // User edit his character (Owner can edit character too)
     public PlayerCharacterDTO updatePlayerCharacter(PlayerCharacterRequestDTO playerCharacterRequestDTO, UUID characterUuid, UUID campaignUuid) {
         User user = currentAuthUserService.getCurrentAuthUser();
 
@@ -138,6 +172,7 @@ public class PlayerCharacterService {
         return playerCharacterDTOMapper.apply(playerCharacterUpdated);
     }
 
+    // User can turn his character inactive (Owner can turn a character inactive too)
     public void characterActivation(UUID campaignUuid, UUID characterUuid) {
         User user = currentAuthUserService.getCurrentAuthUser();
 
@@ -167,6 +202,7 @@ public class PlayerCharacterService {
         playerCharacterRepository.save(playerCharacterToChangeActivation);
     }
 
+    // User delete his character (Owner can delete characters too)
     public void deletePlayerCharacter(UUID campaignUuid, UUID characterUuid, boolean isConfirmed) {
         checkConfirmation(isConfirmed);
 
@@ -196,6 +232,7 @@ public class PlayerCharacterService {
         playerCharacterRepository.delete(playerCharacterToDelete);
     }
 
+    // User create a character
     public PlayerCharacterDTO createPlayerCharacter(UUID campaignUuid, PlayerCharacterRequestDTO playerCharacterRequestDTO) {
         User user = currentAuthUserService.getCurrentAuthUser();
 

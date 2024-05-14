@@ -2,6 +2,7 @@ package com.jawbr.dnd5e.exptracker.dto.mapper;
 
 import com.jawbr.dnd5e.exptracker.dto.response.CampaignDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.PlayerCharacterDTO;
+import com.jawbr.dnd5e.exptracker.entity.Campaign;
 import com.jawbr.dnd5e.exptracker.entity.PlayerCharacter;
 import com.jawbr.dnd5e.exptracker.util.ExperiencePointsTable;
 import com.jawbr.dnd5e.exptracker.util.Mapper;
@@ -10,6 +11,12 @@ import java.util.function.Function;
 
 @Mapper
 public class PlayerCharacterDTOMapper implements Function<PlayerCharacter, PlayerCharacterDTO> {
+
+    private final CampaignDTOMapper campaignDTOMapper;
+
+    public PlayerCharacterDTOMapper(CampaignDTOMapper campaignDTOMapper) {
+        this.campaignDTOMapper = campaignDTOMapper;
+    }
 
     @Override
     public PlayerCharacterDTO apply(PlayerCharacter playerCharacter) {
@@ -30,5 +37,9 @@ public class PlayerCharacterDTOMapper implements Function<PlayerCharacter, Playe
                 .player_character_public_uuid(playerCharacter.getUuid().toString())
                 .active(playerCharacter.isActive())
                 .build();
+    }
+
+    public CampaignDTO mapAdjustedExpCharactersToCampaign(Campaign campaign) {
+        return campaignDTOMapper.apply(campaign);
     }
 }

@@ -67,7 +67,7 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
                                 .level(ExperiencePointsTable.getLevelFromXP(pc.getExperiencePoints()))
                                 .player(UserDTO.builder()
                                         .username(pc.getPlayer().getUsername())
-                                        .is_active(pc.isActive())
+                                        .is_active(pc.getPlayer().isActive())
                                         .public_uuid(pc.getPlayer().getUuid().toString())
                                         .build())
                                 .player_character_public_uuid(pc.getUuid().toString())

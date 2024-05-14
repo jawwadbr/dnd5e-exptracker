@@ -96,7 +96,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"test\",\r\n    \"email\": \"test@gmail.com\",\r\n    \"password\": \"test\"\r\n\r\n}",
+							"raw": "{\r\n    \"username\": \"test\",\r\n    \"email\": \"test@gmail.com\",\r\n    \"password\": \"test\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -215,7 +215,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/campaigns/me/joined",
+							"raw": "http://localhost:8080/api/campaigns/me/joined?page=0&pageSize=16",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -226,6 +226,21 @@
 								"campaigns",
 								"me",
 								"joined"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "pageSize",
+									"value": "16"
+								},
+								{
+									"key": "sortBy",
+									"value": null,
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -237,7 +252,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/campaigns/me/created",
+							"raw": "http://localhost:8080/api/campaigns/me/createdjoined?page=0&pageSize=16",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -247,7 +262,22 @@
 								"api",
 								"campaigns",
 								"me",
-								"created"
+								"createdjoined"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "pageSize",
+									"value": "16"
+								},
+								{
+									"key": "sortBy",
+									"value": null,
+									"disabled": true
+								}
 							]
 						}
 					},

@@ -10,7 +10,7 @@ public record UserDTO(
         String email,
         String created_at,
         String role,
-        boolean is_active,
+        Boolean is_active,
         String public_uuid
 ) {
 }

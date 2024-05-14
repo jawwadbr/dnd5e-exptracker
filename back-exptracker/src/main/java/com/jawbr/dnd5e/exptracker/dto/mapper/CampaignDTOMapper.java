@@ -31,7 +31,7 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
             for(InviteCode code : campaign.getInviteCodes()) {
                 inviteCodes.add(InviteCodeDTO.builder()
                         .code(code.getCode())
-                        .expiry_date(code.getExpiryDate().format(formatter))
+                        .expiry_date(code.getExpiryDate().format(formatter) + " UTC")
                         .build());
             }
         }

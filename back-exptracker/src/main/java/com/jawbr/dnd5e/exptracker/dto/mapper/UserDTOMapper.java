@@ -23,6 +23,7 @@ public class UserDTOMapper implements Function<User, UserDTO> {
                 .role(user.getRole().name().substring(5).substring(0, 1).toUpperCase() +
                         user.getRole().name().substring(5).substring(1).toLowerCase())
                 .public_uuid(user.getUuid().toString())
+                .is_active(null)
                 .build();
     }
 
@@ -44,6 +45,7 @@ public class UserDTOMapper implements Function<User, UserDTO> {
                 .public_uuid(user.getUuid().toString())
                 .role(user.getRole().name().substring(5).substring(0, 1).toUpperCase() +
                         user.getRole().name().substring(5).substring(1).toLowerCase())
+                .is_active(null)
                 .build();
     }
 

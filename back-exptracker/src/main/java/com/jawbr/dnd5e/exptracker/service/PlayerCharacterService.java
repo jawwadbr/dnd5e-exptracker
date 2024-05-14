@@ -92,24 +92,32 @@ public class PlayerCharacterService {
             if(characterUuid == null) {
                 playerCharacterList.forEach(pc -> {
                     if(includeInactive || pc.isActive()) {
-                        pc.setExperiencePoints(pc.getExperiencePoints() + xpValue);
+                        int currentXp = pc.getExperiencePoints();
+                        int newXp = currentXp + xpValue;
+                        pc.setExperiencePoints(Math.min(Math.max(newXp, 0), 355000));
                     }
                 });
+
+                for(PlayerCharacter pcUpdated : playerCharacterList) {
+                    playerCharacterRepository.save(pcUpdated);
+                }
             }
             else { // If there is characterUuid then only that char receives the xp adjust, does not need the includeInactive
                 PlayerCharacter pc = playerCharacterList.stream()
                         .filter(aChar -> aChar.getUuid().equals(characterUuid))
                         .findFirst()
                         .orElseThrow(() -> new PlayerCharacterNotFoundException("Player Character not found."));
-                pc.setExperiencePoints(pc.getExperiencePoints() + xpValue);
+
+                int currentXp = pc.getExperiencePoints();
+                int newXp = currentXp + xpValue;
+
+                pc.setExperiencePoints(Math.min(Math.max(newXp, 0), 355000));
+
+                playerCharacterRepository.save(pc);
             }
         }
         else {
             throw new PlayerCharacterNotFoundException("No player characters in the campaign.");
-        }
-
-        for(PlayerCharacter pcUpdated : playerCharacterList) {
-            playerCharacterRepository.save(pcUpdated);
         }
 
         return playerCharacterDTOMapper.mapAdjustedExpCharactersToCampaign(campaign);

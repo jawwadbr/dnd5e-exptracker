@@ -715,6 +715,52 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Adjust Experience Points",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/player-characters/me/xp?campaignUuid=043320dc-2ff1-42cb-a09a-a9a575b82ca4&xp_value=500",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"player-characters",
+								"me",
+								"xp"
+							],
+							"query": [
+								{
+									"key": "campaignUuid",
+									"value": "043320dc-2ff1-42cb-a09a-a9a575b82ca4",
+									"description": "Required"
+								},
+								{
+									"key": "characterUuid",
+									"value": "a1c4a895-2e0a-4a3a-b387-255255e16c4e",
+									"description": "Optional, only given when adjusting the xp of a specific character",
+									"disabled": true
+								},
+								{
+									"key": "xp_value",
+									"value": "500",
+									"description": "Required"
+								},
+								{
+									"key": "include_inactive",
+									"value": "true",
+									"description": "Optional, default value false",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

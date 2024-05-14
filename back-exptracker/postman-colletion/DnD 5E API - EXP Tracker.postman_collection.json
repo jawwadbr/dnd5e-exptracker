@@ -1152,12 +1152,12 @@
 							"response": []
 						},
 						{
-							"name": "Deactivate User",
+							"name": "Toggle User Account Activation",
 							"request": {
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/api/admin/users/deactivate/3f2877a0-4a2b-4e5d-8b5e-3b5a07859a10?isConfirmed=true",
+									"raw": "http://localhost:8080/api/admin/users/activation/3f2877a0-4a2b-4e5d-8b5e-3b5a07859a10?isConfirmed=true",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1167,36 +1167,7 @@
 										"api",
 										"admin",
 										"users",
-										"deactivate",
-										"3f2877a0-4a2b-4e5d-8b5e-3b5a07859a10"
-									],
-									"query": [
-										{
-											"key": "isConfirmed",
-											"value": "true"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Reactivate User",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/api/admin/users/reactivate/3f2877a0-4a2b-4e5d-8b5e-3b5a07859a10?isConfirmed=true",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"admin",
-										"users",
-										"reactivate",
+										"activation",
 										"3f2877a0-4a2b-4e5d-8b5e-3b5a07859a10"
 									],
 									"query": [

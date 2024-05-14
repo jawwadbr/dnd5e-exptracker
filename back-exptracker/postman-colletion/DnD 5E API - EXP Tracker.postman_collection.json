@@ -581,7 +581,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Jonas\",\r\n    \"char_class\": \"paladin\",\r\n    \"char_race\": \"human\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Jonas 2\",\r\n    \"char_class\": \"paladin\",\r\n    \"char_race\": \"human\",\r\n    \"experience_points\": 250\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -636,6 +636,80 @@
 								{
 									"key": "isConfirmed",
 									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Activate or Deactivate PC",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/player-characters/me/activation?campaignUuid=3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03&characterUuid=3f2877a0-4a2b-4e5d-8b5e-3b5a07859a06",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"player-characters",
+								"me",
+								"activation"
+							],
+							"query": [
+								{
+									"key": "campaignUuid",
+									"value": "3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03",
+									"description": "Optional, only used for the creator side"
+								},
+								{
+									"key": "characterUuid",
+									"value": "3f2877a0-4a2b-4e5d-8b5e-3b5a07859a06"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update PC",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Updated\",\r\n    \"char_class\": \"wizard\",\r\n    \"char_race\": \"elf\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/player-characters/me?campaignUuid=3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03&characterUuid=13714b6f-35e9-4efe-8d8c-3a1112cd4dd4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"player-characters",
+								"me"
+							],
+							"query": [
+								{
+									"key": "campaignUuid",
+									"value": "3f2877a0-4a2b-4e5d-8b5e-3b5a07859a03",
+									"description": "Optional, only used for creator side"
+								},
+								{
+									"key": "characterUuid",
+									"value": "13714b6f-35e9-4efe-8d8c-3a1112cd4dd4"
 								}
 							]
 						}

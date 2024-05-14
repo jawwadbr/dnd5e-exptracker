@@ -19,6 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
@@ -128,20 +130,23 @@ public class UserService {
      * When an account is deactivated all the user information is not deleted i.e. created characters, joined campaigns and created campaigns
      * But it will be deleted if the account is deactivated for long enough
      */
-    public void adminDeactivateUser(boolean isConfirmed, UUID userUuid) {
+    public void adminToggleUserActivation(boolean isConfirmed, UUID userUuid) {
         checkConfirmation(isConfirmed);
-        User userToBeDeactivated = Optional.ofNullable(userRepository.findByUuid(userUuid))
+        User userToToggleActivation = Optional.ofNullable(userRepository.findByUuid(userUuid))
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        userToBeDeactivated.setActive(false);
-        userRepository.save(userToBeDeactivated);
-    }
 
-    public void adminReactivateUser(boolean isConfirmed, UUID userUuid) {
-        checkConfirmation(isConfirmed);
-        User userToBeReactivated = Optional.ofNullable(userRepository.findByUuid(userUuid))
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-        userToBeReactivated.setActive(true);
-        userRepository.save(userToBeReactivated);
+        userToToggleActivation.setActive(!userToToggleActivation.isActive());
+
+        if(!userToToggleActivation.isActive()) {
+            // Account has 1 week before it's deleted
+            //userToToggleActivation.setDeactivationExpirationDate(ZonedDateTime.now().plusHours(168).withMinute(0).withSecond(0).withNano(0));
+            userToToggleActivation.setDeactivationExpirationDate(ZonedDateTime.now().plusDays(7).with(LocalTime.MIN));
+        }
+        else {
+            userToToggleActivation.setDeactivationExpirationDate(null);
+        }
+
+        userRepository.save(userToToggleActivation);
     }
 
     public UserDTO adminCheckUserProfile(UUID userUuid) {

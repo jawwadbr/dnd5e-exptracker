@@ -15,7 +15,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @AllArgsConstructor
@@ -39,5 +38,5 @@ public class InviteCode {
     private Campaign campaign;
 
     @Column(nullable = false)
-    private LocalDateTime expiryDate = ZonedDateTime.now().plusHours(24).withMinute(0).withSecond(0).withNano(0).toLocalDateTime();
+    private ZonedDateTime expiryDate = ZonedDateTime.now().plusHours(24).withMinute(0).withSecond(0).withNano(0);
 }

@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -19,4 +21,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findByRole(UserRole role, Pageable pageable);
 
     Page<User> findByUsernameContainingAndRole(String keyword, Pageable pageable, UserRole role);
+
+    List<User> findByDeactivationExpirationDateBefore(ZonedDateTime time);
 }

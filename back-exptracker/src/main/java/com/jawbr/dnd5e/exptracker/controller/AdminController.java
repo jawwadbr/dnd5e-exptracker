@@ -90,21 +90,12 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/users/deactivate/{userUuid}")
-    public ResponseEntity<Void> deactivateUser(
+    @PutMapping("/users/activation/{userUuid}")
+    public ResponseEntity<Void> toggleUserActivation(
             @RequestParam(defaultValue = "false") boolean isConfirmed,
             @PathVariable UUID userUuid)
     {
-        userService.adminDeactivateUser(isConfirmed, userUuid);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/users/reactivate/{userUuid}")
-    public ResponseEntity<Void> reactivateUser(
-            @RequestParam(defaultValue = "false") boolean isConfirmed,
-            @PathVariable UUID userUuid)
-    {
-        userService.adminReactivateUser(isConfirmed, userUuid);
+        userService.adminToggleUserActivation(isConfirmed, userUuid);
         return ResponseEntity.noContent().build();
     }
 

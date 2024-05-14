@@ -61,6 +61,7 @@ public class UserDTOMapper implements Function<User, UserDTO> {
                 .role(user.getRole().name().substring(5).substring(0, 1).toUpperCase() +
                         user.getRole().name().substring(5).substring(1).toLowerCase())
                 .public_uuid(user.getUuid().toString())
+                .deletion_date(user.getDeactivationExpirationDate() != null ? user.getDeactivationExpirationDate().format(formatter) + " UTC" : null)
                 .build();
     }
 }

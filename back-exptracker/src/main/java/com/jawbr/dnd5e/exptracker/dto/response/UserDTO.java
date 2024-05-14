@@ -11,6 +11,7 @@ public record UserDTO(
         String created_at,
         String role,
         Boolean is_active,
+        String deletion_date,
         String public_uuid
 ) {
 }

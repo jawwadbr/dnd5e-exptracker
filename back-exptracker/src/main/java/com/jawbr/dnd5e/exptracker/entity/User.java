@@ -66,4 +66,6 @@ public class User {
     @OneToMany(mappedBy = "player", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<PlayerCharacter> createdCharacters;
 
+    @Column
+    private ZonedDateTime deactivationExpirationDate;
 }

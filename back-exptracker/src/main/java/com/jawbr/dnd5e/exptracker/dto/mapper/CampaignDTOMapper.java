@@ -52,7 +52,7 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
                                 .player(UserDTO.builder()
                                         .username(pc.getPlayer().getUsername())
                                         .public_uuid(pc.getPlayer().getUuid().toString())
-                                        .is_active(pc.isActive())
+                                        .is_active(pc.getPlayer().isActive())
                                         .build())
                                 .player_character_public_uuid(pc.getUuid().toString())
                                 .active(pc.isActive())

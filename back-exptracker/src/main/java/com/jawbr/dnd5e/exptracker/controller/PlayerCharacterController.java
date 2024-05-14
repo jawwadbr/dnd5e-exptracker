@@ -7,8 +7,10 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +40,10 @@ public class PlayerCharacterController {
     }
 
     @PostMapping("/me/create/{campaignUuid}")
-    public PlayerCharacterDTO createPlayerCharacter(@Valid @RequestBody PlayerCharacterRequestDTO playerCharacterRequestDTO, @PathVariable UUID campaignUuid) {
+    public PlayerCharacterDTO createPlayerCharacter(
+            @Valid @RequestBody PlayerCharacterRequestDTO playerCharacterRequestDTO,
+            @PathVariable UUID campaignUuid)
+    {
         return playerCharacterService.createPlayerCharacter(campaignUuid, playerCharacterRequestDTO);
     }
 
@@ -48,7 +53,25 @@ public class PlayerCharacterController {
             @RequestParam UUID characterUuid,
             @RequestParam(defaultValue = "false") boolean isConfirmed)
     {
-        playerCharacterService.deletePlayerCharacter(campaignUuid ,characterUuid, isConfirmed);
+        playerCharacterService.deletePlayerCharacter(campaignUuid, characterUuid, isConfirmed);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/me/activation")
+    public ResponseEntity<Void> characterActivation(
+            @RequestParam(required = false) UUID campaignUuid,
+            @RequestParam UUID characterUuid)
+    {
+        playerCharacterService.characterActivation(campaignUuid, characterUuid);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/me")
+    public PlayerCharacterDTO updatePlayerCharacter(
+            @RequestParam(required = false) UUID campaignUuid,
+            @RequestParam UUID characterUuid,
+            @RequestBody PlayerCharacterRequestDTO playerCharacterRequestDTO)
+    {
+        return playerCharacterService.updatePlayerCharacter(playerCharacterRequestDTO, characterUuid, campaignUuid);
     }
 }

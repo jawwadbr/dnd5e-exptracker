@@ -113,16 +113,7 @@ public class CampaignService {
         return users.stream().map(user -> campaignDTOMapper.mapAllJoinedPlayersOnCampaignToDTO(user, campaignUuid)).toList();
     }
 
-    /*
-     * User create campaign
-     * User update campaign
-     * User delete campaign
-     * User owner of campaign create invite code
-     * User join campaign using invite code
-     * User leave campaign
-     * User owner can remove a player from the campaign
-     */
-
+    // User update campaign
     public CampaignDTO updateCampaign(CampaignRequestDTO campaignRequestDTO, UUID campaignUuid) {
         User user = currentAuthUser.getCurrentAuthUser();
 
@@ -143,6 +134,7 @@ public class CampaignService {
         return campaignDTOMapper.apply(campaign);
     }
 
+    // User owner can remove a player from the campaign
     public void removePlayerFromCampaign(UUID campaignUuid, UUID userUuid, boolean isConfirmed) {
         checkConfirmation(isConfirmed);
 
@@ -163,6 +155,7 @@ public class CampaignService {
         campaignRepository.save(campaign);
     }
 
+    // User delete campaign
     public void deleteCampaign(UUID campaignUuid, boolean isConfirmed) {
         checkConfirmation(isConfirmed);
 
@@ -176,6 +169,7 @@ public class CampaignService {
 
     }
 
+    // User leave campaign
     public GenericMessageResponseDTO leaveCampaign(UUID campaignUuid, boolean isConfirmed) {
         checkConfirmation(isConfirmed);
 
@@ -201,6 +195,7 @@ public class CampaignService {
                 .build();
     }
 
+    // User join campaign using invite code
     public CampaignDTO joinCampaign(String inviteCode) {
 
         InviteCode invite = Optional.ofNullable(inviteCodeRepository.findByCode(inviteCode))
@@ -217,6 +212,7 @@ public class CampaignService {
         return campaignDTOMapper.apply(campaign);
     }
 
+    // User create campaign
     public CampaignDTO createCampaign(CampaignRequestDTO campaignRequestDTO) {
         User user = currentAuthUser.getCurrentAuthUser();
         Campaign campaign = Campaign.builder()
@@ -249,6 +245,7 @@ public class CampaignService {
         return campaignDTOMapper.apply(campaign);
     }
 
+    // User owner of campaign create invite code
     public InviteCodeDTO generateInviteCodeForCampaign(UUID campaignUuid) {
         Campaign campaign = Optional.ofNullable(
                         campaignRepository.findCreatedCampaignByUuidAndUserId(campaignUuid, currentAuthUser.getCurrentAuthUser().getId()))

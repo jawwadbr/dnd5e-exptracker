@@ -1,0 +1,26 @@
+INSERT INTO class(name, uuid) VALUES ('Barbarian', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440000', '-', '')));
+INSERT INTO class(name, uuid) VALUES ('Bard', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440001', '-', '')));
+INSERT INTO class(name, uuid) VALUES ('Cleric', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440002', '-', '')));
+INSERT INTO class(name, uuid) VALUES ('Druid', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440003', '-', '')));
+INSERT INTO class(name, uuid) VALUES ('Fighter', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440004', '-', '')));
+INSERT INTO class(name, uuid) VALUES ('Monk', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440005', '-', '')));
+INSERT INTO class(name, uuid) VALUES ('Paladin', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440006', '-', '')));
+INSERT INTO class(name, uuid) VALUES ('Ranger', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440007', '-', '')));
+INSERT INTO class(name, uuid) VALUES ('Rogue', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440008', '-', '')));
+INSERT INTO class(name, uuid) VALUES ('Sorcerer', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440009', '-', '')));
+INSERT INTO class(name, uuid) VALUES ('Warlock', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440010', '-', '')));
+INSERT INTO class(name, uuid) VALUES ('Wizard', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440011', '-', '')));
+INSERT INTO class(name, uuid) VALUES ('Artificer', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440012', '-', '')));
+INSERT INTO class(name, uuid) VALUES ('Blood Hunter', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440013', '-', '')));
+
+INSERT INTO race(name, uuid) VALUES ('Dragonborn', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440014', '-', '')));
+INSERT INTO race(name, uuid) VALUES ('Dwarf', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440015', '-', '')));
+INSERT INTO race(name, uuid) VALUES ('Elf', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440016', '-', '')));
+INSERT INTO race(name, uuid) VALUES ('Gnome', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440017', '-', '')));
+INSERT INTO race(name, uuid) VALUES ('Half-Elf', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440018', '-', '')));
+INSERT INTO race(name, uuid) VALUES ('Halfling', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440019', '-', '')));
+INSERT INTO race(name, uuid) VALUES ('Half-Orc', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440020', '-', '')));
+INSERT INTO race(name, uuid) VALUES ('Human', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440021', '-', '')));
+INSERT INTO race(name, uuid) VALUES ('Tiefling', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440022', '-', '')));
+INSERT INTO race(name, uuid) VALUES ('Aarakocra', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440023', '-', '')));
+INSERT INTO race(name, uuid) VALUES ('Aasimar', UNHEX(REPLACE('550e8400-e29b-41d4-a716-446655440024', '-', '')));

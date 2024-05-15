@@ -1,0 +1,1 @@
+INSERT INTO user(username, email, password, active, role, created_at, uuid) VALUES ('admin', 'admin@gmail.com', '$2a$10$feQKfzQ2O1vJ2qdoLcr0ju6CoWp.ufN7l1g31SgzDEuyWIsT1Gkdi', true, 'ROLE_ADMIN', '2024-02-04 21:00:00', UNHEX(REPLACE('3f2877a0-4a2b-4e5d-8b5e-3b5a07859a05', '-', '')))

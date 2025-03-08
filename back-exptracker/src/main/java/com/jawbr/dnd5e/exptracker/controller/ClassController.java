@@ -2,6 +2,9 @@ package com.jawbr.dnd5e.exptracker.controller;
 
 import com.jawbr.dnd5e.exptracker.dto.response.ClassDTO;
 import com.jawbr.dnd5e.exptracker.service.ClassService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
+@Tag(name = "Classes Controller", description = "Classes endpoints")
 @RestController
 @RequestMapping("/api/classes")
 public class ClassController {
@@ -21,6 +25,8 @@ public class ClassController {
         this.classService = classService;
     }
 
+    @Operation(summary = "Find all classes",
+            security = {@SecurityRequirement(name = "Bearer ")})
     @GetMapping
     public Page<ClassDTO> findAllClasses(
             @RequestParam(required = false) Integer page,
@@ -31,6 +37,8 @@ public class ClassController {
         return classService.findAllClasses(page, pageSize, sortBy);
     }
 
+    @Operation(summary = "Find class using UUID",
+            security = {@SecurityRequirement(name = "Bearer ")})
     @GetMapping("/{classUuid}")
     public ClassDTO findByUuid(@PathVariable UUID classUuid) {
         return classService.findByUuid(classUuid);

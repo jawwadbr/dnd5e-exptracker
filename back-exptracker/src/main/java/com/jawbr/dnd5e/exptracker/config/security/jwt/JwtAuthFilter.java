@@ -1,4 +1,4 @@
-package com.jawbr.dnd5e.exptracker.security.jwt;
+package com.jawbr.dnd5e.exptracker.config.security.jwt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

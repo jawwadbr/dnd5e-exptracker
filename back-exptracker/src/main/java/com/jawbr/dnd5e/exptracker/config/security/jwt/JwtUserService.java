@@ -1,4 +1,4 @@
-package com.jawbr.dnd5e.exptracker.security.jwt;
+package com.jawbr.dnd5e.exptracker.config.security.jwt;
 
 import com.jawbr.dnd5e.exptracker.dto.request.LoginRequestDTO;
 import com.jawbr.dnd5e.exptracker.dto.response.TokenDTO;

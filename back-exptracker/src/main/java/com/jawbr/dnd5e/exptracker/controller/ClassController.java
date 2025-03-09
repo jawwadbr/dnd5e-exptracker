@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Tag(name = "Classes Controller", description = "Classes endpoints")
 @RestController
-@RequestMapping("/api/classes")
+@RequestMapping("/api/v1/classes")
 public class ClassController {
 
     private final ClassService classService;

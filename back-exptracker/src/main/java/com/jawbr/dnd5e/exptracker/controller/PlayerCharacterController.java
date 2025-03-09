@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Tag(name = "Player Characters Controller", description = "Player Characters endpoints")
 @RestController
-@RequestMapping("/api/player-characters")
+@RequestMapping("/api/v1/player-characters")
 public class PlayerCharacterController {
 
     private final PlayerCharacterService playerCharacterService;

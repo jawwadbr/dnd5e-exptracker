@@ -34,6 +34,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = getJWTFromRequest(request);
         try {
             if(StringUtils.hasText(token) && jwtService.validateToken(token)) {
+                if(jwtService.isTokenBlacklisted(jwtService.getClaimsFromToken(token).getId())) {
+                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                    response.getWriter().write(convertObjectToJson(
+                            new ErrorResponse(
+                                    HttpStatus.UNAUTHORIZED.value(),
+                                    "Invalid Token.")));
+                    return;
+                }
+
                 String email = jwtService.getEmailFromJWT(token);
 
                 UserDetails userDetails = jwtUserService.loadUserByUsername(email);
@@ -44,8 +54,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
+
             filterChain.doFilter(request, response);
         } catch(RuntimeException exc) {
+
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.getWriter().write(convertObjectToJson(

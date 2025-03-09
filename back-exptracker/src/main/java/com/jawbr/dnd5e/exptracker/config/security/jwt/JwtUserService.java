@@ -7,6 +7,7 @@ import com.jawbr.dnd5e.exptracker.exception.InvalidPasswordException;
 import com.jawbr.dnd5e.exptracker.exception.UserAccountDeactivatedException;
 import com.jawbr.dnd5e.exptracker.exception.UserNotFoundException;
 import com.jawbr.dnd5e.exptracker.repository.UserRepository;
+import io.jsonwebtoken.Claims;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -58,5 +59,14 @@ public class JwtUserService implements UserDetailsService {
         if(!isPasswordMatches) {
             throw new InvalidPasswordException("Incorrect password!");
         }
+    }
+
+    public void logout(String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        Claims claims = jwtService.getClaimsFromToken(token);
+        String jti = claims.getId();
+        long expirationMillis = claims.getExpiration().getTime() - System.currentTimeMillis();
+
+        jwtService.blacklistToken(jti, expirationMillis);
     }
 }

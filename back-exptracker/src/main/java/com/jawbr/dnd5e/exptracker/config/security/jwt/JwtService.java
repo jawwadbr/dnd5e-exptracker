@@ -5,12 +5,14 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -20,6 +22,12 @@ public class JwtService {
     private int expiration;
     @Value("${security.jwt.secret.key}")
     private String key;
+
+    private final StringRedisTemplate redisTemplate;
+
+    public JwtService(StringRedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     public TokenDTO generateToken(String email) {
         Calendar currentDate = Calendar.getInstance();
@@ -31,6 +39,7 @@ public class JwtService {
         String token = Jwts.builder()
                 .claim("sub", email)
                 .claim("exp", expirationDate.getTime() / 1000)
+                .id(UUID.randomUUID().toString())
                 .signWith(secretKey)
                 .compact();
 
@@ -58,6 +67,14 @@ public class JwtService {
         return claims.getSubject();
     }
 
+    public Claims getClaimsFromToken(String token) {
+        return Jwts.parser()
+                .verifyWith(getSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
     public boolean validateToken(String token) {
         Jwts.parser()
                 .verifyWith(getSecretKey())
@@ -65,5 +82,13 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
         return true;
+    }
+
+    public void blacklistToken(String jti, long expirationMillis) {
+        redisTemplate.opsForValue().set(jti, "blacklisted", expirationMillis, TimeUnit.MILLISECONDS);
+    }
+
+    public boolean isTokenBlacklisted(String jti) {
+        return redisTemplate.hasKey(jti);
     }
 }

@@ -28,7 +28,7 @@ import java.util.UUID;
 
 @Tag(name = "Campaign Controller", description = "Campaign endpoints")
 @RestController
-@RequestMapping("/api/campaigns")
+@RequestMapping("/api/v1/campaigns")
 public class CampaignController {
 
     private final CampaignService campaignService;

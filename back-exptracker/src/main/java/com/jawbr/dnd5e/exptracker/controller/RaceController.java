@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Tag(name = "Race Controller", description = "Race endpoints")
 @RestController
-@RequestMapping("/api/races")
+@RequestMapping("/api/v1/races")
 public class RaceController {
 
     private final RaceService raceService;

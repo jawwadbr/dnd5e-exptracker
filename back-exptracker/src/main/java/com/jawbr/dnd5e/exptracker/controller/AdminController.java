@@ -28,7 +28,7 @@ import java.util.UUID;
 
 @Tag(name = "Admin Controller", description = "Admin endpoints")
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/v1/admin")
 public class AdminController {
 
     private final ClassService classService;

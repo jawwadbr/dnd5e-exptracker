@@ -66,4 +66,5 @@ public class Campaign {
     @OneToMany(mappedBy = "campaign", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<InviteCode> inviteCodes;
 
+    private String webhookUrl;
 }

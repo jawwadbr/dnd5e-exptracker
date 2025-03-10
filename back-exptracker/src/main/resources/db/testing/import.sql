@@ -38,7 +38,7 @@ INSERT INTO race(name, uuid) VALUES ('Aarakocra', UNHEX(REPLACE('e5261bc9-c38a-4
 INSERT INTO race(name, uuid) VALUES ('Aasimar', UNHEX(REPLACE('777e31c3-f8dc-432c-b729-aa2d189c9abe', '-', '')));
 INSERT INTO race(name, uuid) VALUES ('Shadar-Kai', UNHEX(REPLACE('c9f55d34-111c-4299-840c-5af2064968b2', '-', '')));
 INSERT INTO race(name, uuid) VALUES ('Changeling', UNHEX(REPLACE('311fbd73-6bf1-4ea8-9a08-b40506fccbab', '-', '')));
-
+INSERT INTO race(name, uuid) VALUES ('Firbolg', UNHEX(REPLACE('06f45a00-85fc-474e-8d46-39b527b85aec', '-', '')));
 
 INSERT INTO player_character(id, experience_points, campaign_id, class_id, race_id, user_id, uuid, character_name, active) VALUES (1, 2000, 1, 1, 1, 1, UNHEX(REPLACE('83f8634b-33df-4f67-b659-66b55cd8534f', '-', '')), 'Mirlon', true)
 INSERT INTO player_character(id, experience_points, campaign_id, class_id, race_id, user_id, uuid, character_name, active) VALUES (2, 2900, 1, 3, 6, 2, UNHEX(REPLACE('3f2877a0-4a2b-4e5d-8b5e-3b5a07859a06', '-', '')), 'Makan', true)

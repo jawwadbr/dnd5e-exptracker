@@ -26,3 +26,4 @@ INSERT INTO race(name, uuid) VALUES ('Aarakocra', UNHEX(REPLACE('e5261bc9-c38a-4
 INSERT INTO race(name, uuid) VALUES ('Aasimar', UNHEX(REPLACE('777e31c3-f8dc-432c-b729-aa2d189c9abe', '-', '')));
 INSERT INTO race(name, uuid) VALUES ('Shadar-Kai', UNHEX(REPLACE('c9f55d34-111c-4299-840c-5af2064968b2', '-', '')));
 INSERT INTO race(name, uuid) VALUES ('Changeling', UNHEX(REPLACE('311fbd73-6bf1-4ea8-9a08-b40506fccbab', '-', '')));
+INSERT INTO race(name, uuid) VALUES ('Firbolg', UNHEX(REPLACE('06f45a00-85fc-474e-8d46-39b527b85aec', '-', '')));

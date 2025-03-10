@@ -145,4 +145,12 @@ public class CampaignController {
     {
         return campaignService.updateCampaign(campaignRequestDTO, campaignUuid);
     }
+
+    @Operation(summary = "Owner remove the configured webhook from Campaign using UUID",
+            security = {@SecurityRequirement(name = "Bearer ")})
+    @PutMapping("/me/{campaignUuid}")
+    public ResponseEntity<Void> removeConfiguredWebhookFromCampaign(@PathVariable UUID campaignUuid) {
+        campaignService.removeConfiguredWebhookFromCampaign(campaignUuid);
+        return ResponseEntity.noContent().build();
+    }
 }

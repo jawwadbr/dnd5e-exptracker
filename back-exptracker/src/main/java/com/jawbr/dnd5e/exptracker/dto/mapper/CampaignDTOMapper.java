@@ -23,6 +23,14 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
 
     @Override
     public CampaignDTO apply(Campaign campaign) {
+        return mapToDTOApply(campaign, false);
+    }
+
+    public CampaignDTO ownerApply(Campaign campaign) {
+        return mapToDTOApply(campaign, true);
+    }
+
+    public CampaignDTO mapToDTOApply(Campaign campaign, boolean isOwner) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss a");
 
@@ -78,6 +86,14 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
             }
         }
 
+        Boolean webhookSet = null;
+        if(isOwner && campaign.getWebhookUrl() != null && !campaign.getWebhookUrl().isEmpty()) {
+            webhookSet = true;
+        }
+        else if(isOwner) {
+            webhookSet = false;
+        }
+
         return CampaignDTO.builder()
                 .name(campaign.getName())
                 .description(campaign.getDescription())
@@ -90,6 +106,7 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
                         .build())
                 .players_characters(activePlayerCharacterReferenceDTOS)
                 .inactive_players_characters(inactivePlayerCharacterReferenceDTOS)
+                .is_webhook_configured(webhookSet)
                 .build();
     }
 
@@ -125,6 +142,7 @@ public class CampaignDTOMapper implements Function<Campaign, CampaignDTO> {
                 .description(campaign.getDescription())
                 .public_campaign_uuid(campaign.getUuid().toString())
                 .invite_codes(inviteCodes)
+                .is_webhook_configured(campaign.getWebhookUrl() != null && !campaign.getWebhookUrl().isEmpty())
                 .build();
     }
 

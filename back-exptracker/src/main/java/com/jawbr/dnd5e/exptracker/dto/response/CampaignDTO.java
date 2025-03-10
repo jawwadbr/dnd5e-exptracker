@@ -15,6 +15,7 @@ public record CampaignDTO(
         List<InviteCodeDTO> invite_codes,
         List<PlayerCharacterDTO> players_characters,
         List<PlayerCharacterDTO> inactive_players_characters,
+        Boolean is_webhook_configured,
         CampaignCreatorDTO campaign_creator
 ) {
     @Builder

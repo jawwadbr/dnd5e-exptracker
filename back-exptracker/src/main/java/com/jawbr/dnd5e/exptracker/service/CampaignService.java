@@ -38,16 +38,18 @@ public class CampaignService {
     private final CampaignDTOMapper campaignDTOMapper;
     private final InviteCodeDTOMapper inviteCodeDTOMapper;
     private final CurrentAuthUserService currentAuthUser;
+    private final WebhookEncryptionService webhookEncryptionService;
 
     public CampaignService(CampaignRepository campaignRepository,
                            InviteCodeRepository inviteCodeRepository, CampaignDTOMapper campaignDTOMapper,
-                           InviteCodeDTOMapper inviteCodeDTOMapper, CurrentAuthUserService currentAuthUser)
+                           InviteCodeDTOMapper inviteCodeDTOMapper, CurrentAuthUserService currentAuthUser, WebhookEncryptionService webhookEncryptionService)
     {
         this.campaignRepository = campaignRepository;
         this.inviteCodeRepository = inviteCodeRepository;
         this.campaignDTOMapper = campaignDTOMapper;
         this.inviteCodeDTOMapper = inviteCodeDTOMapper;
         this.currentAuthUser = currentAuthUser;
+        this.webhookEncryptionService = webhookEncryptionService;
     }
 
     public Page<CampaignDTO> findJoinedCampaigns(Integer page, Integer pageSize, String sortBy) {
@@ -64,9 +66,15 @@ public class CampaignService {
 
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by(sortByField));
 
-        Page<Campaign> campaigns = campaignRepository.findJoinedCampaignsByUserId(currentAuthUser.getCurrentAuthUser().getId(), pageable);
+        User currentUser = currentAuthUser.getCurrentAuthUser();
 
-        return campaigns.map(campaignDTOMapper::mapJoinedCampaignsToDTO);
+        Page<Campaign> campaigns = campaignRepository.findJoinedCampaignsByUserId(currentUser.getId(), pageable);
+
+        return campaigns.map(campaign -> {
+            boolean isOwner = campaign.getCreator().equals(currentUser);
+            return isOwner ? campaignDTOMapper.mapCreatedCampaignsToDTO(campaign) : campaignDTOMapper.mapJoinedCampaignsToDTO(campaign);
+        });
+        //return campaigns.map(campaignDTOMapper::mapJoinedCampaignsToDTO);
     }
 
     public Page<CampaignDTO> findCreatedCampaigns(Integer page, Integer pageSize, String sortBy) {
@@ -90,11 +98,17 @@ public class CampaignService {
     }
 
     public CampaignDTO findJoinedCampaignByUuid(UUID campaignUuid) {
+        User currentUser = currentAuthUser.getCurrentAuthUser();
         Campaign campaign = Optional.ofNullable(
-                        campaignRepository.findJoinedCampaignByUuidAndUserId(campaignUuid, currentAuthUser.getCurrentAuthUser().getId()))
+                        campaignRepository.findJoinedCampaignByUuidAndUserId(campaignUuid, currentUser.getId()))
                 .orElseThrow(() -> new CampaignNotFoundException("Campaign not found."));
 
-        return campaignDTOMapper.apply(campaign);
+        if(campaign.getCreator().equals(currentUser)) {
+            return campaignDTOMapper.ownerApply(campaign);
+        }
+        else {
+            return campaignDTOMapper.apply(campaign);
+        }
     }
 
     public CampaignDTO findCreatedCampaignByUuid(UUID campaignUuid) {
@@ -102,7 +116,7 @@ public class CampaignService {
                         campaignRepository.findCreatedCampaignByUuidAndUserId(campaignUuid, currentAuthUser.getCurrentAuthUser().getId()))
                 .orElseThrow(() -> new CampaignNotFoundException("Campaign not found."));
 
-        return campaignDTOMapper.apply(campaign);
+        return campaignDTOMapper.ownerApply(campaign);
     }
 
     public List<CampaignPlayersDTO> findAllJoinedPlayersOnCampaign(UUID campaignUuid) {
@@ -125,13 +139,17 @@ public class CampaignService {
                 ? campaignRequestDTO.name() : campaign.getName();
         final String description = StringUtils.hasText(campaignRequestDTO.description())
                 ? campaignRequestDTO.description() : campaign.getDescription();
+        final String webhook = StringUtils.hasText(campaignRequestDTO.discord_webhook())
+                ? campaignRequestDTO.discord_webhook() : campaign.getWebhookUrl();
 
         campaign.setName(name);
         campaign.setDescription(description);
+        // Remove the https... from url for better storage
+        campaign.setWebhookUrl(webhookEncryptionService.encrypt(webhook.replace("https://discord.com/api/webhooks/", "")));
 
         campaign = campaignRepository.save(campaign);
 
-        return campaignDTOMapper.apply(campaign);
+        return campaignDTOMapper.ownerApply(campaign);
     }
 
     // User owner can remove a player from the campaign
@@ -231,6 +249,11 @@ public class CampaignService {
 
         campaign.setInviteCodes(List.of(code));
 
+        // Save the webhook, but before we encrypt the webhook in case of a database breach
+        if(campaignRequestDTO.discord_webhook() != null && !campaignRequestDTO.discord_webhook().isEmpty())
+            campaign.setWebhookUrl(webhookEncryptionService.encrypt
+                    (campaignRequestDTO.discord_webhook().replace("https://discord.com/api/webhooks/", "")));
+
         // In case of duplicated UUID - Chances are extremely low but still checking
         boolean saved = false;
         while(!saved) {
@@ -242,7 +265,20 @@ public class CampaignService {
             }
         }
 
-        return campaignDTOMapper.apply(campaign);
+        return campaignDTOMapper.ownerApply(campaign);
+    }
+
+    // Owner removes the configured webhook
+    public void removeConfiguredWebhookFromCampaign(UUID campaignUuid) {
+        User user = currentAuthUser.getCurrentAuthUser();
+
+        Campaign campaign = Optional.ofNullable(
+                        campaignRepository.findCreatedCampaignByUuidAndUserId(campaignUuid, user.getId()))
+                .orElseThrow(() -> new CampaignNotFoundException("Campaign not found."));
+
+        campaign.setWebhookUrl(null);
+
+        campaignRepository.save(campaign);
     }
 
     // User owner of campaign create invite code

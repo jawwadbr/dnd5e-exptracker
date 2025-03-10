@@ -1,7 +1,8 @@
 package com.jawbr.dnd5e.exptracker.exception.handler;
 
 import com.jawbr.dnd5e.exptracker.exception.CampaignNotFoundException;
-import com.jawbr.dnd5e.exptracker.exception.DiscordWebhookException;
+import com.jawbr.dnd5e.exptracker.exception.DiscordWebhookBadRequestException;
+import com.jawbr.dnd5e.exptracker.exception.DiscordWebhookNotFoundException;
 import com.jawbr.dnd5e.exptracker.exception.InviteCodeNotFoundException;
 import com.jawbr.dnd5e.exptracker.exception.errorResponse.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,14 @@ public class CampaignExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleException(DiscordWebhookException exc) {
+    public ResponseEntity<ErrorResponse> handleException(DiscordWebhookBadRequestException exc) {
         ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(DiscordWebhookNotFoundException exc) {
+        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), exc.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 }

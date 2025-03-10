@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Setter
 @AllArgsConstructor
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class DiscordWebhookException extends RuntimeException {
+public class DiscordWebhookBadRequestException extends RuntimeException {
     private String message;
 }

@@ -8,7 +8,7 @@ import com.jawbr.dnd5e.exptracker.entity.Campaign;
 import com.jawbr.dnd5e.exptracker.entity.PlayerCharacter;
 import com.jawbr.dnd5e.exptracker.entity.User;
 import com.jawbr.dnd5e.exptracker.exception.CampaignNotFoundException;
-import com.jawbr.dnd5e.exptracker.exception.DiscordWebhookException;
+import com.jawbr.dnd5e.exptracker.exception.DiscordWebhookBadRequestException;
 import com.jawbr.dnd5e.exptracker.exception.PlayerCharacterNotFoundException;
 import com.jawbr.dnd5e.exptracker.repository.CampaignRepository;
 import com.jawbr.dnd5e.exptracker.util.ExperiencePointsTable;
@@ -53,10 +53,10 @@ public class DiscordWebhookService {
         if(characters.isEmpty()) {
             throw new PlayerCharacterNotFoundException("No character found in campaign. Can't send the details to Discord.");
         }
-        
+
         // Decrypt webhook from campaign
         if(campaign.getWebhookUrl() == null || campaign.getWebhookUrl().isEmpty()) {
-            throw new DiscordWebhookException("Webhook is null or invalid.");
+            throw new DiscordWebhookBadRequestException("Webhook is null or invalid.");
         }
         String decryptedWebhook = webhookEncryptionService.decrypt(campaign.getWebhookUrl());
         String webhookUrl = "https://discord.com/api/webhooks/" + decryptedWebhook;
@@ -100,7 +100,11 @@ public class DiscordWebhookService {
         payload.setEmbeds(List.of(embed));
 
         // Send to Discord
-        restTemplate.postForObject(webhookUrl, payload, String.class);
+        try {
+            restTemplate.postForObject(webhookUrl, payload, String.class);
+        } catch(Exception e) {
+            throw new DiscordWebhookBadRequestException("Something went wrong. Check Webhook URL and try again later.");
+        }
 
         return GenericMessageResponseDTO.builder()
                 .message("Successfully sent data to Discord via webhook.")

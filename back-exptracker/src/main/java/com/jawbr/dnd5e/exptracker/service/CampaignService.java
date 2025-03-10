@@ -11,6 +11,8 @@ import com.jawbr.dnd5e.exptracker.entity.Campaign;
 import com.jawbr.dnd5e.exptracker.entity.InviteCode;
 import com.jawbr.dnd5e.exptracker.entity.User;
 import com.jawbr.dnd5e.exptracker.exception.CampaignNotFoundException;
+import com.jawbr.dnd5e.exptracker.exception.DiscordWebhookBadRequestException;
+import com.jawbr.dnd5e.exptracker.exception.DiscordWebhookNotFoundException;
 import com.jawbr.dnd5e.exptracker.exception.IllegalParameterException;
 import com.jawbr.dnd5e.exptracker.exception.InviteCodeNotFoundException;
 import com.jawbr.dnd5e.exptracker.repository.CampaignRepository;
@@ -27,6 +29,8 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.jawbr.dnd5e.exptracker.util.CheckRequestConfirmation.checkConfirmation;
 
@@ -139,13 +143,28 @@ public class CampaignService {
                 ? campaignRequestDTO.name() : campaign.getName();
         final String description = StringUtils.hasText(campaignRequestDTO.description())
                 ? campaignRequestDTO.description() : campaign.getDescription();
-        final String webhook = StringUtils.hasText(campaignRequestDTO.discord_webhook())
-                ? campaignRequestDTO.discord_webhook() : campaign.getWebhookUrl();
+        if(!StringUtils.hasText(campaignRequestDTO.discord_webhook())) {
+            campaign.setWebhookUrl(null);
+        }
+        else {
+            String webhook = campaignRequestDTO.discord_webhook();
+
+            // Check if the webhook matches the pattern, because in PATCH endpoint we don't use @Valid
+            String pattern = "^https://discord.com/api/webhooks/\\d+/[A-Za-z0-9-_]+$";
+            Pattern regexPattern = Pattern.compile(pattern);
+            Matcher matcher = regexPattern.matcher(webhook);
+            if (!matcher.matches()) {
+                throw new DiscordWebhookBadRequestException("Invalid Discord Webhook URL!");
+            }
+
+            // Remove the https... from url for better storage
+            webhook = webhook.replace("https://discord.com/api/webhooks/", "");
+
+            campaign.setWebhookUrl(webhookEncryptionService.encrypt(webhook));
+        }
 
         campaign.setName(name);
         campaign.setDescription(description);
-        // Remove the https... from url for better storage
-        campaign.setWebhookUrl(webhookEncryptionService.encrypt(webhook.replace("https://discord.com/api/webhooks/", "")));
 
         campaign = campaignRepository.save(campaign);
 
@@ -276,6 +295,9 @@ public class CampaignService {
                         campaignRepository.findCreatedCampaignByUuidAndUserId(campaignUuid, user.getId()))
                 .orElseThrow(() -> new CampaignNotFoundException("Campaign not found."));
 
+        if(campaign.getWebhookUrl() == null) {
+            throw new DiscordWebhookNotFoundException(String.format("Campaign '%s' does not have a webhook configured.", campaign.getName()));
+        }
         campaign.setWebhookUrl(null);
 
         campaignRepository.save(campaign);
